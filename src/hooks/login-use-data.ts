@@ -14,10 +14,14 @@ export const useModal = (props: ModalPropsType) => {
   const width = computed(() => props.width)
   const title = computed(() => props.title)
   const btn = computed(() => props.okBtn)
+  const okExtraText = computed(() => props.okExtraText)
+  const btnOtherShow = computed(() => props.btnOtherShow)
   return {
     open,
     width,
     title,
-    btn
+    btn,
+    okExtraText,
+    btnOtherShow
   }
 }

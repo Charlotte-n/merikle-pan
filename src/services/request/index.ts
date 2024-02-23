@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { HYRequestConfig } from './type'
-
+import { useUserInfo } from '@/stores/userInfo.ts'
 // 拦截器: 蒙版Loading/token/修改配置
 
 /**
@@ -25,6 +25,12 @@ class HYRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // loading/token
+        if (useUserInfo()) {
+          const token = useUserInfo().token as string
+          if (token) {
+            config.headers.set('Authorization', token)
+          }
+        }
         return config
       },
       (err) => {
@@ -33,6 +39,10 @@ class HYRequest {
     )
     this.instance.interceptors.response.use(
       (res) => {
+        if (res.data.data?.token) {
+          const token = 'Beare' + res.data.data?.token
+          useUserInfo().updateToken(token)
+        }
         return res.data
       },
       (err) => {

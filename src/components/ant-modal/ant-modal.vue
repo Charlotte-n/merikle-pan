@@ -6,11 +6,11 @@ const props = defineProps<ModalPropsType>()
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'ok'): void
+  (e: 'showOtherBtn'): void
 }>()
-const { open, title, width, btn } = useModal(props)
+const { open, title, width, btn, btnOtherShow } = useModal(props)
 
 const close = () => {
-  console.log('我要关闭了')
   emit('close')
 }
 const handleOk = () => {
@@ -37,7 +37,19 @@ const handleOk = () => {
         <a-button v-if="showCancel" :type="btn?.type || 'default'" class="mr-[10px]" @click="close"
           >取消</a-button
         >
-        <a-button :type="btn?.type || 'primary'" @click="handleOk">{{ btn?.text }}</a-button>
+        <a-button
+          :type="btn?.type || 'primary'"
+          @click="
+            () => {
+              handleOk()
+            }
+          "
+          v-if="!btnOtherShow"
+          >{{ btn?.text }}</a-button
+        >
+        <template v-else>
+          <slot name="okBtn"></slot>
+        </template>
       </div>
     </template>
   </a-modal>

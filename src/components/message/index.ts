@@ -2,7 +2,7 @@ import { message } from 'ant-design-vue'
 const [messageApi] = message.useMessage()
 
 const Message = () => {
-  return MessageType
+  return MessageType()
 }
 const MessageType = () => {
   const success = async (value: string) => {
@@ -21,4 +21,4 @@ const MessageType = () => {
     warn
   }
 }
-export default Message
+export default Message()

@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useLoginData } from '@/hooks/login-use-data.ts'
 import { UserOutlined, LockOutlined, VerifiedOutlined } from '@ant-design/icons-vue'
 import AntModal from '@/components/ant-modal/ant-modal.vue'
 import { login } from '@/data/login.ts'
 import type { FormInstance } from 'ant-design-vue'
+import {
+  getImageCaptcha,
+  LoginApi,
+  registerApi,
+  ResetPasswordApi,
+  SendEmailApi,
+  verifyCodeApi
+} from '@/apis/lr.ts'
+import { useRouter } from 'vue-router'
+
+import { message } from 'ant-design-vue'
 const show = ref(0) //登录为0，没有账号注册为1，忘记密码为2
 const { formState, rules } = useLoginData()
 const formRef = ref<FormInstance>()
@@ -12,6 +23,7 @@ let map = new Map()
 const open = ref(false)
 const disabled = ref(false)
 const codeDisabled = ref(true)
+const router = useRouter()
 
 const setShow = (val: number) => {
   show.value = val
@@ -28,14 +40,15 @@ const resetForm = () => {
     remember: '',
     twicePassword: '',
     username: '',
-    verifyCode: ''
+    verifyCode: '',
+    is_remember: 0
   }
 }
 //处理按钮状态
 const handleValidate = (name: any, statues: any) => {
   if (statues === true) {
-    console.log(map.has('email'))
     map.set(name, statues)
+    console.log(map)
     switch (show.value) {
       case login.login:
         if (map.size === 3) {
@@ -43,14 +56,14 @@ const handleValidate = (name: any, statues: any) => {
         }
         break
       case login.register:
-        if (map.size === 6) {
+        if (map.size === 5) {
           disabled.value = true
         }
         codeDisabled.value = !map.has('email')
 
         break
       case login.forgot:
-        if (map.size === 5) {
+        if (map.size === 4) {
           disabled.value = true
         }
         codeDisabled.value = !map.has('email')
@@ -78,8 +91,90 @@ const handleOpen = () => {
 const cancel = () => {
   open.value = false
 }
-const sendCode = () => {
-  console.log('发送成功')
+//获取图片验证码
+const ImageCode = ref()
+const getCode = async () => {
+  ImageCode.value = await getImageCaptcha()
+}
+
+//校验验证码
+const verifyCode = async () => {
+  const res = await verifyCodeApi({
+    code: formState.value.code,
+    email: formState.value.email
+  })
+  console.log(res.code)
+  if (res.code === 0) {
+    open.value = false
+    message.success('验证码正确')
+  } else {
+    message.error('验证码错误')
+  }
+}
+
+//登录
+const Login = async () => {
+  //进行全局校验
+  formState.value.is_remember = formState.value.remember ? 1 : 0
+  const validate = formRef.value?.validateFields()
+  if (validate) {
+    await LoginApi({
+      email: formState.value.email,
+      password: formState.value.password,
+      is_remember: formState.value.is_remember
+    })
+    await router.push('/')
+    message.success('登录成功')
+  }
+}
+//重置密码
+const ResetPassword = async () => {
+  //检验验证码
+  const res = await verifyCodeApi({ email: formState.value.email, code: formState.value.code })
+  if (res.code === 0) {
+    await ResetPasswordApi({
+      email: formState.value.email,
+      twicePassword: formState.value.twicePassword,
+      password: formState.value.password
+    })
+    await message.success('密码重置成功')
+    setShow(login.login)
+  }
+}
+//注册
+const register = async () => {
+  const res = await registerApi({
+    email: formState.value.email,
+    nick_name: formState.value.username,
+    password: formState.value.password,
+    twicePassword: formState.value.twicePassword
+  })
+  const resCode = await verifyCodeApi({ email: formState.value.email, code: formState.value.code })
+  if (res.code === 0 && resCode.code === 0) {
+    message.success('注册成功')
+    setShow(login.login)
+  }
+}
+
+//获取验证码
+const sendEmail = async () => {
+  const res = await SendEmailApi(formState.value.email)
+  if (res.code === 1) {
+    isShow.value = false
+    message.error(res.message)
+  } else {
+    showOtherBtn()
+  }
+}
+onMounted(() => {
+  resetForm()
+  getCode()
+})
+//是否显示倒计时组件
+const isShow = ref(false)
+
+const showOtherBtn = () => {
+  isShow.value = true
 }
 </script>
 
@@ -114,7 +209,12 @@ const sendCode = () => {
               type="primary"
               class="ml-[10px] h-[38px]"
               :disabled="codeDisabled"
-              @click="handleOpen"
+              @click="
+                () => {
+                  handleOpen()
+                  isShow = false
+                }
+              "
               >获取验证码</a-button
             >
           </div>
@@ -154,11 +254,14 @@ const sendCode = () => {
         </a-form-item>
         <!--        输入验证码-->
         <a-form-item name="verifyCode">
-          <a-input v-model:value="formState.verifyCode" size="large" placeholder="请输入验证码">
-            <template #prefix>
-              <VerifiedOutlined class="site-form-item-icon" />
-            </template>
-          </a-input>
+          <div class="flex items-center">
+            <a-input v-model:value="formState.verifyCode" size="large" placeholder="请输入验证码">
+              <template #prefix>
+                <VerifiedOutlined class="site-form-item-icon" />
+              </template>
+            </a-input>
+            <span v-html="ImageCode" class="ml-[3px] cursor-pointer" @click="getCode"></span>
+          </div>
         </a-form-item>
         <!--记住我-->
         <a-form-item name="remember" no-style v-if="show === login.login">
@@ -200,6 +303,7 @@ const sendCode = () => {
             type="primary"
             html-type="submit"
             class="login-form-button h-[40px] text-[15px]"
+            @Click="Login"
           >
             登录
           </a-button>
@@ -209,6 +313,7 @@ const sendCode = () => {
             type="primary"
             html-type="submit"
             class="login-form-button h-[40px] text-[15px]"
+            @click="register"
           >
             注册
           </a-button>
@@ -218,6 +323,7 @@ const sendCode = () => {
             type="primary"
             html-type="submit"
             class="login-form-button h-[40px] text-[15px]"
+            @click="ResetPassword"
           >
             重置密码
           </a-button>
@@ -231,13 +337,15 @@ const sendCode = () => {
   </div>
   <AntModal
     :open="open"
+    :btnOtherShow="isShow"
     title="发送验证码"
     :okBtn="{
       text: '发送验证码',
       type: 'primary'
     }"
     @cancel="cancel"
-    @ok="sendCode"
+    @ok="sendEmail"
+    @showOtherBtn="showOtherBtn"
   >
     <div>
       <a-form>
@@ -246,10 +354,13 @@ const sendCode = () => {
           <span>{{ formState.email }}</span>
         </a-form-item>
         <a-form-item label="验证码" name="model-code">
-          <a-input placehoder="输入验证码"></a-input>
+          <a-input placehoder="输入验证码" v-model:value="formState.code"></a-input>
         </a-form-item>
       </a-form>
     </div>
+    <template #okBtn>
+      <a-button @click="verifyCode">确定</a-button>
+    </template>
   </AntModal>
 </template>
 
