@@ -21,15 +21,15 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
-
-//    "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
       "@/components/*": ["./src/components/*"],
       "@/data/*": ["./src/data/*"],
       "@/stores/*": ["./src/stores/*"],
       "@/services/*": ["./src/services/*"],
-      "@/apis/*": ["./src/apis/*"]
+      "@/apis/*": ["./src/apis/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/util/*": ["./src/util/*"]
 
     }
   }

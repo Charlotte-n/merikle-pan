@@ -16,6 +16,9 @@ import {
 import { useRouter } from 'vue-router'
 
 import { message } from 'ant-design-vue'
+import { md5, digetMd5 } from '@/util/md5.ts'
+import { useStorage } from '@/hooks/useStorage.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
 const show = ref(0) //登录为0，没有账号注册为1，忘记密码为2
 const { formState, rules } = useLoginData()
 const formRef = ref<FormInstance>()
@@ -41,7 +44,7 @@ const resetForm = () => {
     twicePassword: '',
     username: '',
     verifyCode: '',
-    is_remember: 0
+    is_remember: checked.value ? 1 : 0
   }
 }
 //处理按钮状态
@@ -51,8 +54,14 @@ const handleValidate = (name: any, statues: any) => {
     console.log(map)
     switch (show.value) {
       case login.login:
-        if (map.size === 3) {
-          disabled.value = true
+        if (map.size === 3 || formState.value.is_remember === 1) {
+          if (formState.value.is_remember === 1) {
+            map.set('email', true)
+            map.set('password', true)
+            disabled.value = true
+          } else {
+            disabled.value = true
+          }
         }
         break
       case login.register:
@@ -60,7 +69,6 @@ const handleValidate = (name: any, statues: any) => {
           disabled.value = true
         }
         codeDisabled.value = !map.has('email')
-
         break
       case login.forgot:
         if (map.size === 4) {
@@ -113,16 +121,35 @@ const verifyCode = async () => {
 }
 
 //登录
+const checked = ref(true)
 const Login = async () => {
   //进行全局校验
-  formState.value.is_remember = formState.value.remember ? 1 : 0
+  console.log(formState.value.remember)
+  formState.value.is_remember = checked.value ? 1 : 0
   const validate = formRef.value?.validateFields()
   if (validate) {
-    await LoginApi({
+    const res = await LoginApi({
       email: formState.value.email,
       password: formState.value.password,
       is_remember: formState.value.is_remember
     })
+    //设置token
+    useStorage().setItem('token', useUserInfo().token as string)
+    //记住账号和密码
+    if (res.data.password && res.data.is_remember === 1) {
+      useStorage().setItem(
+        'userInfoExtra',
+        JSON.stringify({
+          email: res.data.email,
+          password: md5(formState.value.password, 'merikle')
+        })
+      )
+    }
+    if (res.data.password && res.data.is_remember === 0) {
+      if (useStorage().getItem('userInfoExtra')) {
+        useStorage().clear()
+      }
+    }
     await router.push('/')
     message.success('登录成功')
   }
@@ -169,6 +196,15 @@ const sendEmail = async () => {
 onMounted(() => {
   resetForm()
   getCode()
+  if (show.value === login.login) {
+    //查找localstorage是否有用户信息
+    if (localStorage.getItem('userInfoExtra')) {
+      const userInfo = useStorage().getItem('userInfoExtra')
+      const res = JSON.parse(userInfo)
+      formState.value.email = res.email
+      formState.value.password = digetMd5(res.password, 'merikle')
+    }
+  }
 })
 //是否显示倒计时组件
 const isShow = ref(false)
@@ -265,7 +301,7 @@ const showOtherBtn = () => {
         </a-form-item>
         <!--记住我-->
         <a-form-item name="remember" no-style v-if="show === login.login">
-          <a-checkbox v-model:checked="formState.remember">记住我</a-checkbox>
+          <a-checkbox v-model:checked="checked">记住我</a-checkbox>
         </a-form-item>
         <a-form-item class="mt-[10px] mb-[10px]">
           <span

@@ -4,6 +4,9 @@ export type LoginDataType = {
   qq_open_id: number
   nick_name: string
   create_time: string
+  password: string
+  token: string
+  is_remember: number
 }
 
 export type LoginParam = {

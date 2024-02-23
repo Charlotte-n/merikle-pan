@@ -76,7 +76,7 @@ export const verifyCodeApi = (data: { code: string; email: string }) => {
 }
 /**
  * 注册
- * @param email
+ * @param data
  */
 export const registerApi = (data: RegisterParam) => {
   return hyRequest.post({

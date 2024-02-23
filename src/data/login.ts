@@ -71,8 +71,6 @@ export const CheckVerifyCode = async (_rule: Rule, value: string) => {
     return Promise.reject('请输入验证码')
   } else if (res.code === 1) {
     return Promise.reject('验证码不正确')
-  } else {
-    return Promise.resolve()
   }
 }
 

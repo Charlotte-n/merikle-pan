@@ -2,6 +2,9 @@ import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { HYRequestConfig } from './type'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import { useStorage } from '@/hooks/useStorage.ts'
+import { message } from 'ant-design-vue'
+const storage = useStorage()
 // 拦截器: 蒙版Loading/token/修改配置
 
 /**
@@ -26,7 +29,7 @@ class HYRequest {
       (config) => {
         // loading/token
         if (useUserInfo()) {
-          const token = useUserInfo().token as string
+          const token = storage.getItem('token')
           if (token) {
             config.headers.set('Authorization', token)
           }
@@ -38,11 +41,17 @@ class HYRequest {
       }
     )
     this.instance.interceptors.response.use(
-      (res) => {
-        if (res.data.data?.token) {
-          const token = 'Beare' + res.data.data?.token
-          useUserInfo().updateToken(token)
+      async (res) => {
+        try {
+          if (res.data.data?.token) {
+            const token = 'Beare' + res.data.data?.token
+            useUserInfo().updateToken(token)
+          }
+        } catch (e) {
+          await message.error('请重新登录')
+          storage.clear()
         }
+
         return res.data
       },
       (err) => {
