@@ -5,7 +5,7 @@ export const useUserInfo = defineStore('userInfo', () => {
   const userInfo = ref({})
   const token = ref<string>()
   const updateToken = (value: string) => {
-    token.value = 'Beare ' + value
+    token.value = value
   }
   return {
     userInfo,

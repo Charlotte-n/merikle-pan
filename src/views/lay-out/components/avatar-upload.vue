@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import uploadOutlined from '@ant-design/icons-vue/lib/icons/UploadOutlined'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { ref } from 'vue'
+import { message } from 'ant-design-vue'
+import { changeAvatarApi } from '@/apis/user.ts'
+import { useStorage } from '@/hooks/useStorage.ts'
 
 const props = defineProps<{
   open: boolean
@@ -8,36 +12,100 @@ const emits = defineEmits(['cancel'])
 const cancel = () => {
   emits('cancel')
 }
+//上传头像
+function getBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
+}
+
+const previewVisible = ref(false)
+const previewImage = ref('')
+const previewTitle = ref('')
+
+const fileList = ref<any>([])
+
+const handleCancel = () => {
+  previewVisible.value = false
+  previewTitle.value = ''
+}
+const handlePreview = async (file: any) => {
+  if (!file.url && !file.preview) {
+    file.preview = (await getBase64(file.originFileObj)) as string
+  }
+  previewImage.value = file.url || file.preview
+  previewVisible.value = true
+  previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
+}
+const handleUpload = async () => {
+  if (fileList.value.length === 0) {
+    return message.warn('请上传图片')
+  }
+  const UserInfo = JSON.parse(useStorage().getItem('userInfo'))
+  const formData = new FormData()
+  fileList.value?.forEach((file: any) => {
+    formData.append('files[]', file as any)
+  })
+  let length: number = fileList.value!.length as number
+  formData.append('file', fileList.value[length - 1].originFileObj, 'image.png')
+  const res = await changeAvatarApi(UserInfo._id, formData)
+  if (res.code === 0) {
+    message.success('头像修改成功')
+    cancel()
+  }
+}
+const beforeUpload = (file: any) => {
+  fileList.value = [...(fileList.value || []), file]
+  return false
+}
 </script>
 
 <template>
   <Modal
     :open="props.open"
     title="修改头像"
-    :okBtn="{
-      text: '确定'
-    }"
     show-cancel
     @close="cancel"
+    :btn-other-show="false"
+    :ok-btn="{
+      text: '确定'
+    }"
   >
     <div class="pl-[20px] pt-[20px] pb-[20px]">
       <div>
-        <span class="mr-[10px] text-[#97999B]">昵称</span>
+        <span class="mr-[20px] text-[#97999B]">昵称</span>
         <!--       死页面-->
         <span>Merikle</span>
       </div>
       <div class="flex items-center mt-[20px]">
-        <span class="mr-[10px] text-[#97999B]">头像</span>
-        <Avatar :size="90"></Avatar>
-        <div class="self-end ml-[20px]">
-          <a-upload>
-            <a-button type="primary">
-              <template #icon>
-                <upload-outlined></upload-outlined>
-              </template>
-              上传
-            </a-button>
+        <span class="mr-[10px] text-[#97999B] inline-block w-[50px]">头像</span>
+        <div>
+          <a-upload
+            v-model:file-list="fileList"
+            :before-upload="beforeUpload"
+            list-type="picture-card"
+            @preview="handlePreview"
+          >
+            <div v-if="fileList!.length < 1">
+              <plus-outlined />
+              <div style="margin-top: 8px">Upload</div>
+            </div>
           </a-upload>
+          <a-modal
+            :open="previewVisible"
+            :title="previewTitle"
+            :footer="null"
+            @cancel="handleCancel"
+          >
+            <img alt="example" style="width: 100%" :src="previewImage" />
+          </a-modal>
+        </div>
+
+        <div class="ml-[20px]">
+          <a-button type="primary" @click="handleUpload"> 修改头像 </a-button>
         </div>
       </div>
     </div>

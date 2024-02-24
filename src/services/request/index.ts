@@ -41,32 +41,21 @@ class HYRequest {
       }
     )
     this.instance.interceptors.response.use(
-      async (res) => {
-        try {
-          if (res.data.data?.token) {
-            const token = 'Beare' + res.data.data?.token
-            useUserInfo().updateToken(token)
-          }
-        } catch (e) {
-          await message.error('请重新登录')
-          storage.clear()
+      (res) => {
+        console.log('我的值为什么', res)
+        if (res.data.data?.token) {
+          const token = 'Beare ' + res.data.data?.token
+          useUserInfo().updateToken(token)
         }
-
         return res.data
       },
       (err) => {
+        if (err.response.data.code === 401) {
+          message.warn('登录过期,请重新登录')
+          window.location.href = 'http://localhost:5173/login'
+        }
         return err
       }
-    )
-
-    // 针对特定的hyRequest实例添加拦截器
-    this.instance.interceptors.request.use(
-      // config.interceptors?.requestSuccessFn,
-      config.interceptors?.requestFailureFn
-    )
-    this.instance.interceptors.response.use(
-      config.interceptors?.responseSuccessFn,
-      config.interceptors?.responseFailureFn
     )
   }
 

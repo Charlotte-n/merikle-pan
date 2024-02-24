@@ -133,8 +133,14 @@ const Login = async () => {
       password: formState.value.password,
       is_remember: formState.value.is_remember
     })
+    if (res.code === 1) {
+      message.error('密码错误,请重新输入密码')
+      return
+    }
     //设置token
     useStorage().setItem('token', useUserInfo().token as string)
+    //设置用户信息
+    useStorage().setItem('userInfo', JSON.stringify(res.data))
     //记住账号和密码
     if (res.data.password && res.data.is_remember === 1) {
       useStorage().setItem(

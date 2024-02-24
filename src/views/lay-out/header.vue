@@ -78,9 +78,7 @@ const changePannal = (status: number) => {
                 修改密码
               </a>
             </a-menu-item>
-            <a-menu-item key="3" @click.prevent @click="changePannal(changeUserInfo.logOut)"
-              >退出</a-menu-item
-            >
+            <a-menu-item key="2" @click="changePannal(changeUserInfo.logOut)">退出</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -92,6 +90,7 @@ const changePannal = (status: number) => {
     :open="open"
     @cancel="cancel"
   ></AvatarUpload>
+  <!--  修改密码-->
   <ChangePassword
     v-if="currentStatus === changeUserInfo.password && open"
     :open="open"
