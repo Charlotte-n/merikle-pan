@@ -1,7 +1,22 @@
 import hyRequest from '@/services'
 
 enum BASEURL {
-  changeAvatar = '/user/upload/avatar'
+  changeAvatar = '/user/upload/avatar',
+  GET_USER_INFO = '/user/info'
+}
+
+/**
+ * 获取用户信息
+ * @param userId
+ * @constructor
+ */
+export const GetUserInfo = (userId: string) => {
+  return hyRequest.get({
+    url: BASEURL.GET_USER_INFO,
+    params: {
+      userId
+    }
+  })
 }
 
 /**

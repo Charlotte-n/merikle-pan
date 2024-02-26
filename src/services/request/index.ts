@@ -28,8 +28,8 @@ class HYRequest {
     this.instance.interceptors.request.use(
       (config) => {
         // loading/token
-        if (useUserInfo()) {
-          const token = storage.getItem('token')
+        if (useUserInfo().token) {
+          const token = useUserInfo().token
           if (token) {
             config.headers.set('Authorization', token)
           }

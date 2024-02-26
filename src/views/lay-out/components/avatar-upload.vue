@@ -2,8 +2,9 @@
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { changeAvatarApi } from '@/apis/user.ts'
+import { changeAvatarApi, GetUserInfo } from '@/apis/user.ts'
 import { useStorage } from '@/hooks/useStorage.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
 
 const props = defineProps<{
   open: boolean
@@ -12,6 +13,8 @@ const emits = defineEmits(['cancel'])
 const cancel = () => {
   emits('cancel')
 }
+
+const UserStore = useUserInfo()
 //上传头像
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -44,15 +47,17 @@ const handleUpload = async () => {
   if (fileList.value.length === 0) {
     return message.warn('请上传图片')
   }
-  const UserInfo = JSON.parse(useStorage().getItem('userInfo'))
   const formData = new FormData()
   fileList.value?.forEach((file: any) => {
     formData.append('files[]', file as any)
   })
   let length: number = fileList.value!.length as number
   formData.append('file', fileList.value[length - 1].originFileObj, 'image.png')
-  const res = await changeAvatarApi(UserInfo._id, formData)
+  const res = await changeAvatarApi(useUserInfo().userInfo._id, formData)
   if (res.code === 0) {
+    //重新获取用户信息
+    const res = await GetUserInfo(useUserInfo().userInfo._id)
+    useUserInfo().updateUserInfo(res.data)
     message.success('头像修改成功')
     cancel()
   }

@@ -2,9 +2,10 @@
 import Avatar from '@/components/avatar/index.vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import AvatarUpload from '@/views/lay-out/components/avatar-upload.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import ChangePassword from '@/views/lay-out/components/change-password.vue'
 import LoginOut from '@/views/lay-out/components/login-out.vue'
+import { useUserInfo } from '@/stores/userInfo.ts'
 const open = ref(false)
 const cancel = () => {
   open.value = false
@@ -17,6 +18,11 @@ enum changeUserInfo {
   password = 1,
   logOut = 2
 }
+const avatar = computed(() => {
+  return 'http://localhost:3000/static/' + useUserInfo().userInfo.avatar
+})
+console.log(avatar.value)
+
 const currentStatus = ref()
 // 根据不同的选择来显示Modal
 const changePannal = (status: number) => {
@@ -53,9 +59,20 @@ const changePannal = (status: number) => {
       </a-popover>
       <!--      用户的下拉框-->
       <a-dropdown placement="bottom">
-        <Avatar :size="40" class="ml-[20px] cursor-pointer">
-          <template #icon><UserOutlined /></template>
-        </Avatar>
+        <div v-if="!useUserInfo().userInfo.avatar">
+          <Avatar :size="40" class="ml-[20px] cursor-pointer">
+            <template #icon><UserOutlined /></template>
+          </Avatar>
+        </div>
+        <div
+          class="ml-[20px] w-[50px] h-[50px]"
+          style="{
+          border-radius: 100%;
+        }"
+          v-else
+        >
+          <img :src="avatar" class="w-[40px] h-[40px]" alt="" style="border-radius: 100%" />
+        </div>
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">

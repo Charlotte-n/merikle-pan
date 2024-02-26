@@ -1,15 +1,23 @@
-import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useUserInfo = defineStore('userInfo', () => {
-  const userInfo = ref({})
-  const token = ref<string>()
-  const updateToken = (value: string) => {
-    token.value = value
-  }
-  return {
-    userInfo,
-    token,
-    updateToken
+export const useUserInfo = defineStore('userInfoStore', {
+  state: () => ({
+    userInfo: {},
+    token: ''
+  }),
+  actions: {
+    updateToken(value: string) {
+      this.token = value
+    },
+    updateUserInfo(value: any) {
+      this.userInfo = value
+    },
+    //退出登录
+    logOut() {
+      this.token = ''
+    }
+  },
+  persist: {
+    paths: ['userInfo', 'token']
   }
 })

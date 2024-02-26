@@ -19,6 +19,7 @@ import { message } from 'ant-design-vue'
 import { md5, digetMd5 } from '@/util/md5.ts'
 import { useStorage } from '@/hooks/useStorage.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import stores from '@/stores'
 const show = ref(0) //登录为0，没有账号注册为1，忘记密码为2
 const { formState, rules } = useLoginData()
 const formRef = ref<FormInstance>()
@@ -27,7 +28,6 @@ const open = ref(false)
 const disabled = ref(false)
 const codeDisabled = ref(true)
 const router = useRouter()
-
 const setShow = (val: number) => {
   show.value = val
 }
@@ -138,9 +138,8 @@ const Login = async () => {
       return
     }
     //设置token
-    useStorage().setItem('token', useUserInfo().token as string)
-    //设置用户信息
-    useStorage().setItem('userInfo', JSON.stringify(res.data))
+    // useStorage().setItem('token', useUserInfo().token as string)
+    useUserInfo().updateUserInfo(res.data)
     //记住账号和密码
     if (res.data.password && res.data.is_remember === 1) {
       useStorage().setItem(
