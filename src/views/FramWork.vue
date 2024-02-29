@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/views/lay-out/header.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { menu } from '@/data/home.ts'
 const router = useRouter()
 const route = useRoute()
@@ -29,11 +29,17 @@ watch(
     deep: true
   }
 )
+const header = ref()
+let addFile = header.value?.addFile
+onMounted(() => {
+  addFile = header.value.addFile
+  console.log(addFile, '我是addFile')
+})
 </script>
 
 <template>
   <!--  头部-->
-  <Header></Header>
+  <Header ref="header"></Header>
   <div class="flex">
     <!--  左侧导航栏-->
     <!--    一级导航-->
@@ -92,7 +98,7 @@ watch(
     <!--  右侧内容-->
     <div class="flex-[10]">
       <RouterView v-slot="{ Component }">
-        <component :is="Component"></component>
+        <component :is="Component" @addFile="addFile"></component>
       </RouterView>
     </div>
   </div>

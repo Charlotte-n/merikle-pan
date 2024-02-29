@@ -3,7 +3,6 @@ import { PlusOutlined } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { changeAvatarApi, GetUserInfo } from '@/apis/user.ts'
-import { useStorage } from '@/hooks/useStorage.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
 
 const props = defineProps<{
@@ -14,7 +13,6 @@ const cancel = () => {
   emits('cancel')
 }
 
-const UserStore = useUserInfo()
 //上传头像
 function getBase64(file: File) {
   return new Promise((resolve, reject) => {
@@ -66,6 +64,7 @@ const beforeUpload = (file: any) => {
   fileList.value = [...(fileList.value || []), file]
   return false
 }
+defineExpose({ a: 123 })
 </script>
 
 <template>

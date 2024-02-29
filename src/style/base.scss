@@ -21,7 +21,10 @@
 .ant-popover .ant-popover-arrow{
   left: 80%!important;
 }
-
+ul{
+  list-style: none;
+padding:0;
+}
 //去除滚动条
 ::-webkit-scrollbar {
   display: none;

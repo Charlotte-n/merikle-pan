@@ -4,7 +4,7 @@
 export const BASE_URL = 'http://localhost:3000'
 //生产环境
 // export const BASE_URL = 'http://codercba.prod:9002'
-export const TIME_OUT = 10000
+export const TIME_OUT = 30000
 
 // 2.依赖当前环境: development/production
 // console.log(process.env.NODE_ENV)

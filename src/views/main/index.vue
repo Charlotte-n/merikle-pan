@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { UploadOutlined, FolderOpenOutlined } from '@ant-design/icons-vue'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Hover from '@/components/hover/index.vue'
 import { HomeColumns, HomeData, HomeHoverData } from '@/data/home.ts'
 const route = useRoute()
 const currentSecondMenuCategory = ref()
+const emits = defineEmits(['addFile'])
 watch(
   () => route,
   (newValue) => {
@@ -17,6 +18,12 @@ watch(
   }
 )
 
+//上传
+const uploadHandler = async (file: any) => {
+  console.log(234)
+  emits('addFile', { file: file, filePid: file.uid })
+  console.log('之后')
+}
 const share = () => {
   console.log('分享')
 }
@@ -35,7 +42,7 @@ const move = () => {
   <div class="pt-[20px] pl-[20px] pr-[20px]">
     <!--    头部-->
     <div class="flex items-center space-x-2 w-[100%]">
-      <a-upload :multiple="false">
+      <a-upload :showUploadList="false" :beforeUpload="uploadHandler">
         <a-button type="primary">
           <template #icon>
             <upload-outlined />

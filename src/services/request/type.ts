@@ -10,4 +10,6 @@ export interface HYInterceptors<T = AxiosResponse> {
 
 export interface HYRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: HYInterceptors<T>
+  showLoading?: boolean
+  dataType?: string
 }

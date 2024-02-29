@@ -4,9 +4,8 @@ import type { HYRequestConfig } from './type'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import { useStorage } from '@/hooks/useStorage.ts'
 import { message } from 'ant-design-vue'
-const storage = useStorage()
+import { useCommonStore } from '@/stores/common.ts'
 // 拦截器: 蒙版Loading/token/修改配置
-
 /**
  * 两个难点:
  *  1.拦截器进行精细控制
@@ -26,7 +25,8 @@ class HYRequest {
 
     // 每个instance实例都添加拦截器
     this.instance.interceptors.request.use(
-      (config) => {
+      (config: any) => {
+        const CommonStore = useCommonStore()
         // loading/token
         if (useUserInfo().token) {
           const token = useUserInfo().token
@@ -34,15 +34,29 @@ class HYRequest {
             config.headers.set('Authorization', token)
           }
         }
+        //loading
+        if (config.showLoading) {
+          CommonStore.openSpinning()
+        } else {
+          CommonStore.closeSpinning()
+        }
         return config
       },
       (err) => {
+        const CommonStore = useCommonStore()
+        CommonStore.closeSpinning()
+        message.error('请求发送失败')
         return err
       }
     )
     this.instance.interceptors.response.use(
-      (res) => {
+      (res: any) => {
+        const CommonStore = useCommonStore()
         console.log('我的值为什么', res)
+        const { showLoading } = res.config
+        if (showLoading) {
+          CommonStore.closeSpinning()
+        }
         if (res.data.data?.token) {
           const token = 'Beare ' + res.data.data?.token
           useUserInfo().updateToken(token)
@@ -50,7 +64,9 @@ class HYRequest {
         return res.data
       },
       (err) => {
-        if (err.response.data.code === 401) {
+        console.log(err)
+        //登录过期了
+        if (err.response?.data.code === 401) {
           message.warn('登录过期,请重新登录')
           window.location.href = 'http://localhost:5173/login'
         }
@@ -93,7 +109,12 @@ class HYRequest {
   post<T = any>(config: HYRequestConfig<T>) {
     return this.request({
       ...config,
-      method: 'POST'
+      method: 'POST',
+      onUploadProgress(event) {
+        if (config.onUploadProgress) {
+          config.onUploadProgress(event)
+        }
+      }
     })
   }
   delete<T = any>(config: HYRequestConfig<T>) {

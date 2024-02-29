@@ -2,10 +2,14 @@
 import Avatar from '@/components/avatar/index.vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import AvatarUpload from '@/views/lay-out/components/avatar-upload.vue'
-import { computed, ref } from 'vue'
+import { computed, ref, defineExpose, onMounted, nextTick } from 'vue'
 import ChangePassword from '@/views/lay-out/components/change-password.vue'
 import LoginOut from '@/views/lay-out/components/login-out.vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import UploadTask from '@/views/lay-out/components/uploadTask.vue'
+import { useCommonStore } from '@/stores/common.ts'
+
+const CommonStore = useCommonStore()
 const open = ref(false)
 const cancel = () => {
   open.value = false
@@ -29,6 +33,15 @@ const changePannal = (status: number) => {
   changeOpen()
   currentStatus.value = status
 }
+//上传组件
+let uploadComponent = ref()
+const addFile = async (value: { file: File; filePid: string }) => {
+  const { file, filePid } = value
+  CommonStore.uploadChangePopoverShow()
+  await uploadComponent.value.addFile(file, filePid)
+}
+defineExpose({ addFile })
+//当这个组件出现的时候，就会获取到子组件内容
 </script>
 
 <template>
@@ -43,17 +56,13 @@ const changePannal = (status: number) => {
     <!--    右侧-->
     <div class="flex items-center">
       <!--      弹窗-->
-      <a-popover trigger="click" class="content">
+      <a-popover
+        @click="CommonStore.changePopoverShow"
+        :open="CommonStore.popoverShow"
+        trigger="click"
+      >
         <template #content>
-          <header class="popover-header pl-[10px] pr-[10px] pt-[10px] pb-[10px]">
-            <span>上传任务</span>
-            <span class="text-[#AFAFAF] ml-[5px]">(仅展示本次上传任务)</span>
-          </header>
-          <main class="min-h-[450px] w-[800px]">
-            <div class="text-center pt-[20px]">
-              <span class="text-center text-[#666666]">暂无上传任务</span>
-            </div>
-          </main>
+          <UploadTask ref="uploadComponent"></UploadTask>
         </template>
         <span class="iconfont icon-transfer text-[#666666] text-[20px] cursor-pointer"></span>
       </a-popover>
@@ -74,7 +83,7 @@ const changePannal = (status: number) => {
           <img :src="avatar" class="w-[40px] h-[40px]" alt="" style="border-radius: 100%" />
         </div>
         <template #overlay>
-          <a-menu>
+          <a-menu ref="menu">
             <a-menu-item key="0">
               <a
                 target="_blank"

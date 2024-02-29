@@ -32,7 +32,6 @@ onMounted(() => {
     },
     onCancel() {
       cancel()
-      console.log('Cancel')
     },
     bodyStyle: {
       padding: '0px 20px'

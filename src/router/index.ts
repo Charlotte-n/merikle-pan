@@ -36,7 +36,6 @@ const router = createRouter({
           path: '/main/:category',
           meta: {
             allowShow: true,
-
             needLogin: true,
             menuCode: 'main'
           },
