@@ -110,9 +110,8 @@ const addFile = async (file: any, fileId: string | number) => {
   const md5FileUid = await computedMd5(fileItem)
   if (md5FileUid === null) {
     return
-  } else {
-    fileItem.md5 = md5FileUid
   }
+  console.log(fileItem.md5)
   //进行上传文件
   await uploadChunk(fileItem.file.uid, fileItem.chunkIndex, fileItem.md5)
 }
