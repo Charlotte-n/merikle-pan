@@ -2,7 +2,7 @@
 import Avatar from '@/components/avatar/index.vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import AvatarUpload from '@/views/lay-out/components/avatar-upload.vue'
-import { computed, ref, defineExpose, onMounted, nextTick } from 'vue'
+import { computed, ref, defineExpose } from 'vue'
 import ChangePassword from '@/views/lay-out/components/change-password.vue'
 import LoginOut from '@/views/lay-out/components/login-out.vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
@@ -25,7 +25,6 @@ enum changeUserInfo {
 const avatar = computed(() => {
   return 'http://localhost:3000/static/' + useUserInfo().userInfo.avatar
 })
-console.log(avatar.value)
 
 const currentStatus = ref()
 // 根据不同的选择来显示Modal
@@ -37,11 +36,15 @@ const changePannal = (status: number) => {
 let uploadComponent = ref()
 const addFile = async (value: { file: File; filePid: string }) => {
   const { file, filePid } = value
+  //当这个弹窗显示的话就会获取到这个uploadComponent
   CommonStore.uploadChangePopoverShow()
-  await uploadComponent.value.addFile(file, filePid)
+  // 等待弹窗组件渲染完成(很重要)
+  await new Promise((resolve) => setTimeout(resolve, 100))
+  if (uploadComponent.value?.addFile) {
+    await uploadComponent.value.addFile(file, filePid)
+  }
 }
 defineExpose({ addFile })
-//当这个组件出现的时候，就会获取到子组件内容
 </script>
 
 <template>

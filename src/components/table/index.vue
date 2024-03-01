@@ -7,6 +7,7 @@ const props = defineProps<{
   pagination?: boolean
   pageSize?: number
   extHeight: number
+  add: boolean
 }>()
 
 const viewportWidth = ref(window.innerHeight - 56 - 20 - 50 - props.extHeight)
@@ -42,6 +43,9 @@ onUnmounted(() => {
 watch(viewportWidth, (newVal, oldVal) => {
   console.log(`Viewport width changed from ${oldVal}px to ${newVal}px`)
 })
+onMounted(() => {
+  console.log(props.data)
+})
 </script>
 
 <template>
@@ -57,29 +61,13 @@ watch(viewportWidth, (newVal, oldVal) => {
       rowClassName="my-row"
     >
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
-          <div class="flex justify-between">
-            <div>
-              {{ record.name }}
-            </div>
-            <div style="display: none" class="hover-v1">
-              <slot name="hover"></slot>
-            </div>
-          </div>
-        </template>
+        <slot name="bodyCell" :column="column" :record="record"></slot>
       </template>
     </a-table>
   </div>
 </template>
 
 <style scoped lang="scss">
-.my-row {
-  &:hover {
-    .hover-v1 {
-      display: block !important;
-    }
-  }
-}
 :global(.ant-empty) {
   height: calc(100vh - 56px - 300px);
   line-height: calc(100vh - 56px - 300px);

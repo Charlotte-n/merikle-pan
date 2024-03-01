@@ -1,16 +1,19 @@
 import hyRequest from '@/services'
 import type {
+  GetAllParam,
   MergeParam,
   UploadChunkOtherParam,
   UploadChunkParam,
   VerifyStatusParam
 } from '@/apis/types/file.ts'
 import type { SingleFileStatus } from '@/data/types/file.ts'
+import type { CommonResponseType } from '@/apis/types/Response.ts'
 
 enum BASEURL {
   UPLOAD_FILE = '/file/upload/chunk',
   VERIFY_STATUS = '/file/upload/isExit',
-  MERGE = '/file/merge'
+  MERGE = '/file/merge',
+  GET_ALL = '/file/list'
 }
 
 /**
@@ -48,10 +51,8 @@ export const UploadChunkApi = (
           currentFile.status = 'upload_finish'
         }
       }
-      console.log(currentFile, '上传我的值为')
       currentFile.uploadSize = index * chunkSize + loaded
       currentFile.uploadProgress = Math.floor((currentFile.uploadSize / fileSize) * 100)
-      //上传成功
       if (currentFile.uploadProgress === 100) {
         currentFile.status = 'upload_finish'
       }
@@ -85,12 +86,24 @@ export const VerifyStatusApi = (value: VerifyStatusParam) => {
  */
 
 export const MergeApi = (param: MergeParam) => {
-  const { fileHash, filename } = param
-  return hyRequest.get({
+  const { fileHash, filename, fileSize } = param
+  return hyRequest.post({
     url: BASEURL.MERGE,
-    params: {
+    data: {
       fileHash,
-      filename
+      filename,
+      fileSize
+    }
+  })
+}
+
+export const getAllFileApi = (param: GetAllParam) => {
+  const { page, pageSize } = param
+  return hyRequest.get<CommonResponseType<any>>({
+    url: BASEURL.GET_ALL,
+    params: {
+      page,
+      pageSize
     }
   })
 }

@@ -1,3 +1,5 @@
+import { ref } from 'vue'
+
 export const menu = [
   {
     path: '/main/all',
@@ -99,8 +101,9 @@ export type HoverData = HoverSingleData[]
 export interface DataItem {
   key: number
   name: string
-  time: number
+  time: number | string
   size: string
+  showEdit: boolean
   children?: DataItem[]
 }
 
@@ -114,30 +117,32 @@ export const HomeColumns = [
     title: '删除时间',
     dataIndex: 'time',
     key: 'time',
-    width: '12%'
+    width: '15%'
   },
   {
     title: '大小',
     dataIndex: 'size',
-    width: '30%',
+    width: '15%',
     key: 'size'
   }
 ]
 
-export const HomeData: DataItem[] = [
+export const HomeData = ref<DataItem[]>([
   {
     key: 1,
     name: 'John Brown sr.',
     time: 60,
-    size: 'New York No. 1 Lake Park'
+    size: 'New York No. 1 Lake Park',
+    showEdit: false
   },
   {
     key: 2,
     name: 'Joe Black',
     time: 32,
-    size: 'Sidney No. 1 Lake Park'
+    size: 'Sidney No. 1 Lake Park',
+    showEdit: false
   }
-]
+])
 export const HomeHoverData = [
   {
     key: 0,

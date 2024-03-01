@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginRegister from '@/views/login-register/index.vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import Message from '@/components/message'
+import { markRaw } from 'vue'
 
 const FramWork = () => import('@/views/FramWork.vue')
 //main
@@ -39,7 +40,7 @@ const router = createRouter({
             needLogin: true,
             menuCode: 'main'
           },
-          component: Main
+          component: markRaw(Main)
         },
         {
           path: '/myShare',

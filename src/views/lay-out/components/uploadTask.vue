@@ -1,80 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { PauseCircleOutlined, CloseCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import type { SingleFileStatus } from '@/data/types/file.ts'
 import SparkMD5 from 'spark-md5'
 import { MergeApi, UploadChunkApi, VerifyStatusApi } from '@/apis/file.ts'
 import type { MergeParam, VerifyStatusParam } from '@/apis/types/file.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import { fileList, STATUS } from '@/data/upload.ts'
+
 const UserStore = useUserInfo()
-const chunkSize = 1024 * 1024 * 5
-const STATUS: any = {
-  emptyfile: {
-    value: 'emptyfile',
-    desc: '文件夹为空',
-    color: '#F750000',
-    icon: 'close'
-  },
-  fail: {
-    value: 'file',
-    desc: '上传失败',
-    color: '#F750000',
-    icon: 'close'
-  },
-  init: {
-    value: 'init',
-    desc: '解析中',
-    color: '#e6a23c',
-    icon: 'clock'
-  },
-  uploading: {
-    value: 'uploading',
-    desc: '上传中',
-    color: '#409eff',
-    icon: 'upload'
-  },
-  upload_finish: {
-    value: 'upload_finish',
-    desc: '上传完成',
-    color: '#67c23a',
-    icon: 'ok'
-  },
-  upload_seconds: {
-    value: 'upload_seconds',
-    desc: '秒传',
-    color: '#67c23a',
-    icon: 'ok'
-  }
-}
-//文件列表
-const fileList = ref<SingleFileStatus[]>([
-  {
-    file: '1234',
-    //文件id
-    uid: '123',
-    //md5进度
-    md5: null,
-    //md5进度
-    md5Progress: 0,
-    //文件名
-    filename: new Date() + '.jpeg',
-    //文件状态
-    status: STATUS.uploading.value,
-    //已上传文件的大小
-    uploadSize: 0,
-    //总文件的大小
-    totalFileSize: 0,
-    //暂停
-    pause: false,
-    //当前分片
-    chunkIndex: 0,
-    //文件父级id
-    filePid: '12345',
-    //错误信息
-    errorMsg: null,
-    uploadProgress: 0
-  }
-])
+const chunkSize = 1024 * 1024
+
 const addFile = async (file: any, fileId: string | number) => {
   const fileItem = {
     file: file,
@@ -111,7 +46,6 @@ const addFile = async (file: any, fileId: string | number) => {
   if (md5FileUid === null) {
     return
   }
-  console.log(fileItem.md5)
   //进行上传文件
   await uploadChunk(fileItem.file.uid, fileItem.chunkIndex, fileItem.md5)
 }
@@ -190,19 +124,23 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     }
     const verifyStatus = await VerifyStatusApi(verifyStatusParam)
     const data = verifyStatus.data
-    if (!data.length) {
+    if (data.length === 0 || data === '') {
       //秒传
-      currentFile.md5Progress = 1
-      currentFile.uploadProgress = 1
+      currentFile.md5Progress = 100
+      currentFile.uploadProgress = 100
       currentFile.status = STATUS.upload_seconds.value
-      return
+      return 0
     } else {
       //可能是断点续传或者是一个新的上传
       //上传中
       currentFile.status = STATUS.uploading.value
+      return 1
     }
   }
-  await judjeFileStatus()
+  const res = await judjeFileStatus()
+  if (res === 0) {
+    return
+  }
   //分片上传
   for (let i = chunkIndex; i < chunks; i++) {
     //当前文件如果停止传输就不去传输了
@@ -244,8 +182,9 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     currentFile.uploadProgress = 100
     //进行合并
     const MergeParam: MergeParam = {
-      filename: file.filename,
-      fileHash: fileHash
+      filename: file.name,
+      fileHash: fileHash,
+      fileSize: fileSize
     }
     const res = await MergeApi(MergeParam)
     if (res.code === 0) {
@@ -260,7 +199,7 @@ const getFileById = (id: string | number) => {
     return item.file.uid === id
   })
 }
-defineExpose({ addFile })
+defineExpose({ addFile: addFile })
 </script>
 
 <template>
@@ -300,7 +239,7 @@ defineExpose({ addFile })
               :percent="item.md5Progress"
               type="circle"
               :size="40"
-              v-if="item.status === STATUS.upload_seconds.value && item.md5Progress <= 100"
+              v-if="item.status === STATUS.upload_seconds.value && item.md5Progress < 100"
             >
             </a-progress>
             <DeleteOutlined

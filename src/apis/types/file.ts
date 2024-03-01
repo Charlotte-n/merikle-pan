@@ -24,4 +24,10 @@ export interface VerifyStatusParam {
 export interface MergeParam {
   fileHash: string
   filename: string
+  fileSize: number
+}
+
+export interface GetAllParam {
+  page: number
+  pageSize: number
 }

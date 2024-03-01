@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/views/lay-out/header.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { menu } from '@/data/home.ts'
 const router = useRouter()
 const route = useRoute()
@@ -30,10 +30,16 @@ watch(
   }
 )
 const header = ref()
+const dynamicComponent = ref()
 let addFile = header.value?.addFile
 onMounted(() => {
   addFile = header.value.addFile
-  console.log(addFile, '我是addFile')
+  console.log(123, addFile)
+  // 在组件创建时绑定事件
+  console.log(dynamicComponent.value)
+  if (dynamicComponent.value && dynamicComponent.value.$on) {
+    dynamicComponent.value.$on('addFile', addFile)
+  }
 })
 </script>
 
@@ -97,8 +103,12 @@ onMounted(() => {
     </div>
     <!--  右侧内容-->
     <div class="flex-[10]">
-      <RouterView v-slot="{ Component }">
-        <component :is="Component" @addFile="addFile"></component>
+      <RouterView>
+        <template v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" @addFile="addFile" ref="dynamicComponent"></component>
+          </keep-alive>
+        </template>
       </RouterView>
     </div>
   </div>
