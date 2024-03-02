@@ -9,12 +9,18 @@ import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Hover from '@/components/hover/index.vue'
 import { HomeColumns, HomeHoverData } from '@/data/home.ts'
-import { getAllFileApi } from '@/apis/file.ts'
+import { addFolderApi, getAllFileApi } from '@/apis/file.ts'
+import moment from 'moment'
+import Icon from '@/components/icon/index.vue'
+import type { AddFolderDataType } from '@/apis/types/file.ts'
+import { message } from 'ant-design-vue'
+import { useUserInfo } from '@/stores/userInfo.ts'
+
 const route = useRoute()
 const currentSecondMenuCategory = ref()
 const emits = defineEmits(['addFile'])
-const HomeData = ref([])
-import moment from 'moment'
+const HomeData = ref<any>([])
+const UserStore = useUserInfo()
 watch(
   () => route,
   (newValue) => {
@@ -36,23 +42,60 @@ const uploadHandler = async (file: any) => {
 const editRef = ref()
 const addStatus = ref(false)
 //新建文件夹
-const add = () => {
+const newItem = ref({
+  key: 3,
+  name: '',
+  time: '',
+  size: '',
+  //目录
+  file_type: 0,
+  showEdit: true,
+  fileId: '',
+  filePid: 0,
+  folder_type: 1
+})
+const add = async () => {
   if (addStatus.value) {
     return
   }
-  const newItem = {
-    key: 3,
-    name: '',
-    time: '',
-    size: '',
-    showEdit: true
-  }
-  HomeData.value.unshift(newItem)
+  HomeData.value.unshift(newItem.value)
   nextTick(() => {
     editRef.value.focus()
   })
   addStatus.value = true
-  console.log(HomeData)
+}
+
+const addFolder = async () => {
+  if (newItem.value.name.indexOf('/') !== -1) {
+    message.error('不能含有/等特殊字符')
+    return
+  }
+  const param: AddFolderDataType = {
+    fileId: '',
+    filePid: 0,
+    name: newItem.value.name,
+    user_id: UserStore.userInfo._id
+  }
+  const res = await addFolderApi(param)
+  if (res.code === 0) {
+    message.success('创建成功')
+    //显示这个文件
+    HomeData.value[0].showEdit = false
+    addStatus.value = false
+    newItem.value = {
+      key: 3,
+      name: '',
+      time: '',
+      size: '',
+      file_type: 0,
+      showEdit: true,
+      fileId: '',
+      filePid: 0,
+      folder_type: 1
+    }
+  } else {
+    message.error(res.message)
+  }
 }
 
 //删除文件名
@@ -87,10 +130,11 @@ const getAllFile = async () => {
       name: item.file_name ? item.file_name : '',
       time: item.create_time ? moment(Number(item.create_time)).format('YYYY-MM-DD hh:mm:ss') : '',
       size: item.file_size ? item.file_size : '',
-      showEdit: false
+      showEdit: false,
+      file_type: item.file_type,
+      folder_type: item.folder_type ? item.folder_type : 0
     }
   })
-  console.log(HomeData.value)
 }
 onMounted(() => {
   getAllFile()
@@ -135,7 +179,7 @@ onMounted(() => {
         批量移动
       </a-button>
       <a-input-search class="xl:w-[25%]" placeholder="输入文件名搜索" allowClear></a-input-search>
-      <i class="iconfont icon-refresh cursor-pointer"></i>
+      <i class="iconfont icon-refresh cursor-pointer" @click="getAllFile"></i>
     </div>
     <!--    全部文件-->
     <div class="mt-[10px] mb-[15px] text-[#636D7E] text-[13px]" style="font-weight: 800">
@@ -154,16 +198,34 @@ onMounted(() => {
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'name'">
           <div class="flex justify-between">
-            <div v-if="!record.showEdit">
-              {{ record.name }}
+            <div v-if="!record.showEdit" class="items-center flex">
+              <!--              判断是否为图片或者音频-->
+              <template v-if="record.file_type === 1 || record.file_type === 3">
+                <Icon :cover="record.name"></Icon>
+              </template>
+              <template v-else>
+                <!--              判断是否为folder-->
+                <Icon v-if="record.folder_type === 0" :file-type="record.file_type"> </Icon>
+                <Icon v-if="record.folder_type === 1" :file-type="0"></Icon>
+              </template>
+              <div class="ml-[10px]">
+                {{ record.name }}
+              </div>
             </div>
             <div v-if="record.showEdit" class="flex justify-center items-center">
-              <a-input class="mr-[20px] w-[400px]" ref="editRef"></a-input>
+              <a-input
+                class="mr-[20px] w-[400px]"
+                ref="editRef"
+                v-model:value="newItem.name"
+              ></a-input>
               <CloseSquareFilled
                 class="mr-[10px] text-[25px] text-[#05A1F7] cursor-pointer close"
                 @click="cancelFloder"
               />
-              <CheckSquareFilled class="text-[25px] text-[#05A1F7] cursor-pointer confirm" />
+              <CheckSquareFilled
+                class="text-[25px] text-[#05A1F7] cursor-pointer confirm"
+                @click="addFolder"
+              />
             </div>
             <div style="display: none" class="hover-v1" v-if="!record.showEdit">
               <Hover

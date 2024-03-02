@@ -56,8 +56,9 @@ onMounted(() => {
       :row-selection="rowSelection"
       :pagination="pagination ? { pageSize: pageSize || 15 } : pagination"
       :style="{
-        height: viewportWidth + 'px'
+        maxHeight: viewportWidth + 'px'
       }"
+      :scroll="{ y: viewportWidth - 60 }"
       rowClassName="my-row"
     >
       <template #bodyCell="{ column, record }">

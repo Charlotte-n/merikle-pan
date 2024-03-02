@@ -52,7 +52,6 @@ class HYRequest {
     this.instance.interceptors.response.use(
       (res: any) => {
         const CommonStore = useCommonStore()
-        console.log('我的值为什么', res)
         const { showLoading } = res.config
         if (showLoading) {
           CommonStore.closeSpinning()
@@ -70,7 +69,7 @@ class HYRequest {
           message.warn('登录过期,请重新登录')
           window.location.href = 'http://localhost:5173/login'
         }
-        return err
+        return err.response.data
       }
     )
   }

@@ -1,5 +1,6 @@
 import hyRequest from '@/services'
 import type {
+  AddFolderDataType,
   GetAllParam,
   MergeParam,
   UploadChunkOtherParam,
@@ -13,7 +14,8 @@ enum BASEURL {
   UPLOAD_FILE = '/file/upload/chunk',
   VERIFY_STATUS = '/file/upload/isExit',
   MERGE = '/file/merge',
-  GET_ALL = '/file/list'
+  GET_ALL = '/file/list',
+  ADD_FOLDER = '/file/addNewFolder'
 }
 
 /**
@@ -28,7 +30,7 @@ export const UploadChunkApi = (
   queryParam: UploadChunkParam,
   otherParam: { chunkSize: number; fileSize: number; index: number; currentFile: SingleFileStatus }
 ) => {
-  const { chunkIndex, fileHash, filename } = queryParam
+  const { chunkIndex, fileHash, filename, file_type } = queryParam
   const { currentFile, fileSize, index, chunkSize } = otherParam
   return hyRequest.post({
     url: BASEURL.UPLOAD_FILE,
@@ -40,7 +42,8 @@ export const UploadChunkApi = (
     params: {
       chunkIndex,
       fileHash,
-      filename
+      filename,
+      file_type
     },
     onUploadProgress(progressEvent) {
       let loaded = progressEvent.loaded
@@ -86,13 +89,15 @@ export const VerifyStatusApi = (value: VerifyStatusParam) => {
  */
 
 export const MergeApi = (param: MergeParam) => {
-  const { fileHash, filename, fileSize } = param
+  const { fileHash, filename, fileSize, user_id, file_type } = param
   return hyRequest.post({
     url: BASEURL.MERGE,
     data: {
       fileHash,
       filename,
-      fileSize
+      fileSize,
+      user_id,
+      file_type
     }
   })
 }
@@ -105,5 +110,16 @@ export const getAllFileApi = (param: GetAllParam) => {
       page,
       pageSize
     }
+  })
+}
+
+/**
+ * 新建文件夹
+ * @param data
+ */
+export const addFolderApi = (data: AddFolderDataType) => {
+  return hyRequest.post({
+    url: BASEURL.ADD_FOLDER,
+    data
   })
 }

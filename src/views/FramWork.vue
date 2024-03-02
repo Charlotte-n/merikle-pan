@@ -34,7 +34,6 @@ const dynamicComponent = ref()
 let addFile = header.value?.addFile
 onMounted(() => {
   addFile = header.value.addFile
-  console.log(123, addFile)
   // 在组件创建时绑定事件
   console.log(dynamicComponent.value)
   if (dynamicComponent.value && dynamicComponent.value.$on) {

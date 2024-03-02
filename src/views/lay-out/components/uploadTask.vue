@@ -152,12 +152,13 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     const end = start + chunkSize > fileSize ? fileSize : start + chunkSize
     //需要上传的内容
     const fileChunk = file.slice(start, end)
-    console.log(fileChunk)
     //上传内容
+    console.log(file.type)
     const ruleForm = {
       chunkIndex: i,
       fileHash: fileHash,
-      filename: file.name + '-' + chunkIndex
+      filename: file.name + '-' + chunkIndex,
+      file_type: file.type
     }
     const otherForm = {
       currentFile: currentFile,
@@ -184,7 +185,9 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     const MergeParam: MergeParam = {
       filename: file.name,
       fileHash: fileHash,
-      fileSize: fileSize
+      fileSize: fileSize,
+      user_id: useUserInfo().userInfo._id,
+      file_type: file.type
     }
     const res = await MergeApi(MergeParam)
     if (res.code === 0) {
