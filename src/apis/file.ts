@@ -3,6 +3,7 @@ import type {
   AddFolderDataType,
   GetAllParam,
   MergeParam,
+  RenameFileDataType,
   UploadChunkOtherParam,
   UploadChunkParam,
   VerifyStatusParam
@@ -15,7 +16,9 @@ enum BASEURL {
   VERIFY_STATUS = '/file/upload/isExit',
   MERGE = '/file/merge',
   GET_ALL = '/file/list',
-  ADD_FOLDER = '/file/addNewFolder'
+  ADD_FOLDER = '/file/addNewFolder',
+  RENAME_FILE = '/file/rename',
+  FILE_IMAGE = '/file/image'
 }
 
 /**
@@ -121,5 +124,31 @@ export const addFolderApi = (data: AddFolderDataType) => {
   return hyRequest.post({
     url: BASEURL.ADD_FOLDER,
     data
+  })
+}
+
+/**
+ * 重命名文件
+ * @param data
+ * @constructor
+ */
+
+export const RenameFileApi = (data: RenameFileDataType) => {
+  return hyRequest.post<CommonResponseType<any>>({
+    url: BASEURL.RENAME_FILE,
+    data
+  })
+}
+
+/**
+ * 获取文件的图片
+ * @param _id
+ */
+export const getFileImageApi = (_id: string) => {
+  return hyRequest.get<CommonResponseType<any>>({
+    url: BASEURL.FILE_IMAGE,
+    params: {
+      _id
+    }
   })
 }

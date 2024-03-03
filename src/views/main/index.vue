@@ -5,16 +5,17 @@ import {
   CloseSquareFilled,
   CheckSquareFilled
 } from '@ant-design/icons-vue'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Hover from '@/components/hover/index.vue'
 import { HomeColumns, HomeHoverData } from '@/data/home.ts'
-import { addFolderApi, getAllFileApi } from '@/apis/file.ts'
+import { addFolderApi, getAllFileApi, RenameFileApi } from '@/apis/file.ts'
 import moment from 'moment'
 import Icon from '@/components/icon/index.vue'
-import type { AddFolderDataType } from '@/apis/types/file.ts'
+import type { AddFolderDataType, RenameFileDataType } from '@/apis/types/file.ts'
 import { message } from 'ant-design-vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import { getImage } from '@/util/getImage.ts'
 
 const route = useRoute()
 const currentSecondMenuCategory = ref()
@@ -55,6 +56,8 @@ const newItem = ref({
   folder_type: 1
 })
 const add = async () => {
+  DelOrEditName.value = DelOrEditNameEnum.DEL
+  confirmStatus.value = CONFIRM_STATUS.ADD_FOLDER
   if (addStatus.value) {
     return
   }
@@ -64,44 +67,85 @@ const add = async () => {
   })
   addStatus.value = true
 }
+/**
+ * 新建文件夹和重命名
+ */
 
-const addFolder = async () => {
-  if (newItem.value.name.indexOf('/') !== -1) {
-    message.error('不能含有/等特殊字符')
-    return
-  }
-  const param: AddFolderDataType = {
-    fileId: '',
-    filePid: 0,
-    name: newItem.value.name,
-    user_id: UserStore.userInfo._id
-  }
-  const res = await addFolderApi(param)
-  if (res.code === 0) {
-    message.success('创建成功')
-    //显示这个文件
-    HomeData.value[0].showEdit = false
-    addStatus.value = false
-    newItem.value = {
-      key: 3,
-      name: '',
-      time: '',
-      size: '',
-      file_type: 0,
-      showEdit: true,
+enum CONFIRM_STATUS {
+  ADD_FOLDER = 0,
+  RENAME_FILE = 1
+}
+
+const confirmStatus = ref(1)
+const fileName = ref('')
+const addFolder = async (index: number) => {
+  //判断是重命名还是添加文件夹
+  if (confirmStatus.value === CONFIRM_STATUS.ADD_FOLDER) {
+    if (newItem.value.name.indexOf('/') !== -1) {
+      message.error('不能含有/等特殊字符')
+      return
+    }
+    const param: AddFolderDataType = {
       fileId: '',
       filePid: 0,
-      folder_type: 1
+      name: newItem.value.name,
+      user_id: UserStore.userInfo._id
     }
+    const res = await addFolderApi(param)
+    if (res.code === 0) {
+      message.success('创建成功')
+      //显示这个文件
+      HomeData.value[0].showEdit = false
+      addStatus.value = false
+      newItem.value = {
+        key: 3,
+        name: '',
+        time: '',
+        size: '',
+        file_type: 0,
+        showEdit: true,
+        fileId: '',
+        filePid: 0,
+        folder_type: 1
+      }
+    } else {
+      message.error(res.message)
+    }
+  } else if (confirmStatus.value === CONFIRM_STATUS.RENAME_FILE) {
+    await RenameFile(index)
+  }
+}
+//重命名
+const RenameFile = async (index: number) => {
+  const param = ref<RenameFileDataType>({
+    filename: newItem.value.name,
+    _id: HomeData.value[index]._id
+  })
+  const res = await RenameFileApi(param.value)
+  if (res.code === 0) {
+    message.success('重命名成功')
+    //然后显示重命名的内容
+    HomeData.value[index].showEdit = false
   } else {
     message.error(res.message)
   }
 }
 
+//定义是删除新建的文件夹还是重命名
+enum DelOrEditNameEnum {
+  DEL = 0,
+  EDIT_NAME = 1
+}
+const DelOrEditName = ref(1)
 //删除文件名
-const cancelFloder = () => {
-  HomeData.value.shift()
-  addStatus.value = false
+const cancelFolder = (index: number) => {
+  //如果是重命名的话就
+  if (DelOrEditName.value === DelOrEditNameEnum.EDIT_NAME) {
+    HomeData.value[index].showEdit = false
+  } else {
+    HomeData.value.shift()
+    addStatus.value = false
+  }
 }
 const share = () => {
   console.log('分享')
@@ -109,8 +153,20 @@ const share = () => {
 const del = () => {
   console.log('删除')
 }
-const edit = () => {
-  console.log('重命名')
+const edit = (index: number) => {
+  DelOrEditName.value = DelOrEditNameEnum.EDIT_NAME
+  confirmStatus.value = CONFIRM_STATUS.RENAME_FILE
+  //如果出现了新建文件夹，将他置为showEdit=false
+  if (HomeData.value[0].showEdit) {
+    //删除这个数据
+    HomeData.value.shift()
+    HomeData.value[0].showEdit = false
+    index = index - 1
+  }
+  HomeData.value?.forEach((item: any) => {
+    item.showEdit = false
+  })
+  HomeData.value[index].showEdit = true
 }
 const move = () => {
   console.log('移动')
@@ -132,10 +188,19 @@ const getAllFile = async () => {
       size: item.file_size ? item.file_size : '',
       showEdit: false,
       file_type: item.file_type,
-      folder_type: item.folder_type ? item.folder_type : 0
+      folder_type: item.folder_type ? item.folder_type : 0,
+      _id: item._id,
+      fileCover: item.file_cover ? item.file_cover : ''
     }
   })
+  console.log(HomeData.value)
 }
+//得到分页数
+const pagation = ref(1)
+const getPagation = (index) => {
+  // pagation.value
+}
+
 onMounted(() => {
   getAllFile()
 })
@@ -194,14 +259,16 @@ onMounted(() => {
       :page-size="15"
       :ext-height="80"
       :add="true"
+      @change="getPagation"
     >
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'name'">
           <div class="flex justify-between">
             <div v-if="!record.showEdit" class="items-center flex">
               <!--              判断是否为图片或者音频-->
               <template v-if="record.file_type === 1 || record.file_type === 3">
-                <Icon :cover="record.name"></Icon>
+                <div>{{ index }}</div>
+                <Icon :cover="HomeData[index].fileCover"></Icon>
               </template>
               <template v-else>
                 <!--              判断是否为folder-->
@@ -220,11 +287,11 @@ onMounted(() => {
               ></a-input>
               <CloseSquareFilled
                 class="mr-[10px] text-[25px] text-[#05A1F7] cursor-pointer close"
-                @click="cancelFloder"
+                @click="cancelFolder(index)"
               />
               <CheckSquareFilled
                 class="text-[25px] text-[#05A1F7] cursor-pointer confirm"
-                @click="addFolder"
+                @click="addFolder(index)"
               />
             </div>
             <div style="display: none" class="hover-v1" v-if="!record.showEdit">
@@ -232,7 +299,7 @@ onMounted(() => {
                 :data="HomeHoverData"
                 @share1="share"
                 @del="del"
-                @edit="edit"
+                @edit="edit(index)"
                 @move="move"
               ></Hover>
             </div>

@@ -66,8 +66,8 @@ class HYRequest {
         console.log(err)
         //登录过期了
         if (err.response?.data.code === 401) {
-          message.warn('登录过期,请重新登录')
           window.location.href = 'http://localhost:5173/login'
+          message.warn('登录过期,请重新登录')
         }
         return err.response.data
       }

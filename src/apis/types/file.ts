@@ -41,3 +41,12 @@ export interface AddFolderDataType {
   filePid: number
   user_id: string
 }
+
+/**
+ * 重命名文件
+ */
+
+export interface RenameFileDataType {
+  filename: string
+  _id: string
+}

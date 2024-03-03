@@ -6,7 +6,8 @@ const props = defineProps({
     type: Number
   },
   cover: String,
-  iconName: String
+  iconName: String,
+  getImage: Function
 })
 
 const FileType = {
@@ -24,6 +25,7 @@ const FileType = {
 }
 
 const getImage = () => {
+  console.log(props.cover)
   if (props.cover) {
     //获取文件图片的路径
     return 'http://localhost:3000/statics/' + props.cover

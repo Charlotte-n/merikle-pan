@@ -61,8 +61,8 @@ onMounted(() => {
       :scroll="{ y: viewportWidth - 60 }"
       rowClassName="my-row"
     >
-      <template #bodyCell="{ column, record }">
-        <slot name="bodyCell" :column="column" :record="record"></slot>
+      <template #bodyCell="{ column, record, index }">
+        <slot name="bodyCell" :column="column" :record="record" :index="index"></slot>
       </template>
     </a-table>
   </div>
