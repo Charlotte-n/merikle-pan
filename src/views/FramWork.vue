@@ -30,15 +30,17 @@ watch(
   }
 )
 const header = ref()
-const dynamicComponent = ref()
 let addFile = header.value?.addFile
 onMounted(() => {
   addFile = header.value.addFile
-  // 在组件创建时绑定事件
-  console.log(dynamicComponent.value)
-  if (dynamicComponent.value && dynamicComponent.value.$on) {
-    dynamicComponent.value.$on('addFile', addFile)
-  }
+})
+
+//查一下这个是为什么
+const isShow = ref(false)
+onMounted(() => {
+  nextTick(() => {
+    isShow.value = true
+  })
 })
 </script>
 
@@ -102,10 +104,10 @@ onMounted(() => {
     </div>
     <!--  右侧内容-->
     <div class="flex-[10]">
-      <RouterView>
+      <RouterView v-if="isShow">
         <template v-slot="{ Component }">
           <keep-alive>
-            <component :is="Component" @addFile="addFile" ref="dynamicComponent"></component>
+            <component :is="Component" @addFile="addFile" v-if="true"></component>
           </keep-alive>
         </template>
       </RouterView>

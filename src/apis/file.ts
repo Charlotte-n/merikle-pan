@@ -1,6 +1,7 @@
 import hyRequest from '@/services'
 import type {
   AddFolderDataType,
+  DeleteFileDataType,
   GetAllParam,
   MergeParam,
   RenameFileDataType,
@@ -18,7 +19,8 @@ enum BASEURL {
   GET_ALL = '/file/list',
   ADD_FOLDER = '/file/addNewFolder',
   RENAME_FILE = '/file/rename',
-  FILE_IMAGE = '/file/image'
+  FILE_IMAGE = '/file/image',
+  DELETE_FILE = '/file/deleteFolder'
 }
 
 /**
@@ -72,7 +74,7 @@ export const UploadChunkApi = (
  * @constructor
  */
 export const VerifyStatusApi = (value: VerifyStatusParam) => {
-  const { fileHash, filename, totalCount } = value
+  const { fileHash, filename, totalCount, file_type } = value
   return hyRequest.get({
     url: BASEURL.VERIFY_STATUS,
     params: {
@@ -80,7 +82,8 @@ export const VerifyStatusApi = (value: VerifyStatusParam) => {
       user_id: value.user_id,
       fileHash,
       filename,
-      totalCount
+      totalCount,
+      file_type
     }
   })
 }
@@ -150,5 +153,16 @@ export const getFileImageApi = (_id: string) => {
     params: {
       _id
     }
+  })
+}
+
+/**
+ * 删除文件
+ * @param data
+ */
+export const deleteFileApi = (data: DeleteFileDataType) => {
+  return hyRequest.post<CommonResponseType<any>>({
+    url: BASEURL.DELETE_FILE,
+    data
   })
 }

@@ -120,7 +120,8 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
       user_id: UserStore.userInfo._id,
       fileHash: fileHash,
       totalCount: chunks,
-      filename: file.name + '-' + chunkIndex
+      filename: file.name + '-' + chunkIndex,
+      file_type: file.type
     }
     const verifyStatus = await VerifyStatusApi(verifyStatusParam)
     const data = verifyStatus.data
@@ -153,7 +154,6 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     //需要上传的内容
     const fileChunk = file.slice(start, end)
     //上传内容
-    console.log(file.type)
     const ruleForm = {
       chunkIndex: i,
       fileHash: fileHash,

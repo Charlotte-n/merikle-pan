@@ -20,6 +20,7 @@ export interface VerifyStatusParam {
   fileHash: string
   totalCount: number
   filename: string
+  file_type: string
 }
 
 export interface MergeParam {
@@ -39,7 +40,7 @@ export interface AddFolderDataType {
   name: string
   fileId: string
   filePid: number
-  user_id: string
+  user_id?: string
 }
 
 /**
@@ -49,4 +50,11 @@ export interface AddFolderDataType {
 export interface RenameFileDataType {
   filename: string
   _id: string
+}
+
+export interface DeleteFileDataType {
+  filename: string
+  fileId: string
+  filePid: number
+  user_id?: string
 }

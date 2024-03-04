@@ -5,17 +5,20 @@ import {
   CloseSquareFilled,
   CheckSquareFilled
 } from '@ant-design/icons-vue'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Hover from '@/components/hover/index.vue'
 import { HomeColumns, HomeHoverData } from '@/data/home.ts'
-import { addFolderApi, getAllFileApi, RenameFileApi } from '@/apis/file.ts'
+import { addFolderApi, deleteFileApi, getAllFileApi, RenameFileApi } from '@/apis/file.ts'
 import moment from 'moment'
 import Icon from '@/components/icon/index.vue'
-import type { AddFolderDataType, RenameFileDataType } from '@/apis/types/file.ts'
+import type {
+  AddFolderDataType,
+  DeleteFileDataType,
+  RenameFileDataType
+} from '@/apis/types/file.ts'
 import { message } from 'ant-design-vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
-import { getImage } from '@/util/getImage.ts'
 
 const route = useRoute()
 const currentSecondMenuCategory = ref()
@@ -44,7 +47,7 @@ const editRef = ref()
 const addStatus = ref(false)
 //新建文件夹
 const newItem = ref({
-  key: 3,
+  key: new Date(),
   name: '',
   time: '',
   size: '',
@@ -56,16 +59,24 @@ const newItem = ref({
   folder_type: 1
 })
 const add = async () => {
-  DelOrEditName.value = DelOrEditNameEnum.DEL
-  confirmStatus.value = CONFIRM_STATUS.ADD_FOLDER
-  if (addStatus.value) {
+  newItem.value.name = ''
+  //判断是否有重命名,有重命名的话就返回
+  if (DelOrEditName.value === DelOrEditNameEnum.EDIT_NAME) {
+    message.warn('请先修改文件名,之后再创建新的文件')
     return
   }
+  DelOrEditName.value = DelOrEditNameEnum.DEL
+  confirmStatus.value = CONFIRM_STATUS.ADD_FOLDER
+  //如果已经添加了新的文件了
+  if (addStatus.value) {
+    message.warn('请填写文件名')
+    return
+  }
+  addStatus.value = true
   HomeData.value.unshift(newItem.value)
   nextTick(() => {
     editRef.value.focus()
   })
-  addStatus.value = true
 }
 /**
  * 新建文件夹和重命名
@@ -73,14 +84,14 @@ const add = async () => {
 
 enum CONFIRM_STATUS {
   ADD_FOLDER = 0,
-  RENAME_FILE = 1
+  RENAME_FILE = 1,
+  RESET = 3
 }
 
-const confirmStatus = ref(1)
-const fileName = ref('')
+const confirmStatus = ref(CONFIRM_STATUS.RESET)
 const addFolder = async (index: number) => {
   //判断是重命名还是添加文件夹
-  if (confirmStatus.value === CONFIRM_STATUS.ADD_FOLDER) {
+  if ((confirmStatus.value as any) === CONFIRM_STATUS.ADD_FOLDER) {
     if (newItem.value.name.indexOf('/') !== -1) {
       message.error('不能含有/等特殊字符')
       return
@@ -98,7 +109,7 @@ const addFolder = async (index: number) => {
       HomeData.value[0].showEdit = false
       addStatus.value = false
       newItem.value = {
-        key: 3,
+        key: new Date(),
         name: '',
         time: '',
         size: '',
@@ -111,9 +122,13 @@ const addFolder = async (index: number) => {
     } else {
       message.error(res.message)
     }
-  } else if (confirmStatus.value === CONFIRM_STATUS.RENAME_FILE) {
+  } else if ((confirmStatus.value as any) === CONFIRM_STATUS.RENAME_FILE) {
     await RenameFile(index)
   }
+  //进行重置
+  DelOrEditName.value = DelOrEditNameEnum.REST
+  confirmStatus.value = CONFIRM_STATUS.RESET
+  addStatus.value = false
 }
 //重命名
 const RenameFile = async (index: number) => {
@@ -126,6 +141,7 @@ const RenameFile = async (index: number) => {
     message.success('重命名成功')
     //然后显示重命名的内容
     HomeData.value[index].showEdit = false
+    HomeData.value[index].name = newItem.value.name
   } else {
     message.error(res.message)
   }
@@ -134,30 +150,56 @@ const RenameFile = async (index: number) => {
 //定义是删除新建的文件夹还是重命名
 enum DelOrEditNameEnum {
   DEL = 0,
-  EDIT_NAME = 1
+  EDIT_NAME = 1,
+  REST = 3
 }
-const DelOrEditName = ref(1)
+const DelOrEditName = ref(DelOrEditNameEnum.REST)
 //删除文件名
 const cancelFolder = (index: number) => {
+  //清空数据
+  newItem.value.name = ''
   //如果是重命名的话就
-  if (DelOrEditName.value === DelOrEditNameEnum.EDIT_NAME) {
+  if ((DelOrEditName.value as any) === DelOrEditNameEnum.EDIT_NAME) {
     HomeData.value[index].showEdit = false
-  } else {
+  } else if ((DelOrEditName.value as any) === DelOrEditNameEnum.DEL) {
+    console.log('我要删除了')
     HomeData.value.shift()
-    addStatus.value = false
   }
+  //进行重置
+  DelOrEditName.value = DelOrEditNameEnum.REST
+  confirmStatus.value = CONFIRM_STATUS.RESET
+  addStatus.value = false
 }
 const share = () => {
   console.log('分享')
 }
-const del = () => {
-  console.log('删除')
+const del = async (index: number) => {
+  //删除文件夹
+  const param = ref<DeleteFileDataType>({
+    filename: HomeData.value[index].name,
+    fileId: HomeData.value[index]._id,
+    filePid: HomeData.value[index].filePid
+  })
+  const res = await deleteFileApi(param.value)
+  if (res.code === 0) {
+    message.success('删除成功')
+    //将这个数据删除
+    HomeData.value.splice(index, 1)
+  }
 }
+const rename = ref<string | number>('')
+
+//重命名edit
 const edit = (index: number) => {
+  //重命名
   DelOrEditName.value = DelOrEditNameEnum.EDIT_NAME
   confirmStatus.value = CONFIRM_STATUS.RENAME_FILE
-  //如果出现了新建文件夹，将他置为showEdit=false
-  if (HomeData.value[0].showEdit) {
+  //点击重命名如果其他的也在这个重命名其他的先消失，这个先显示
+  if (rename.value) {
+    HomeData.value[rename.value as number].showEdit = false
+  }
+  rename.value = index
+  if (addStatus.value && HomeData.value[0].showEdit) {
     //删除这个数据
     HomeData.value.shift()
     HomeData.value[0].showEdit = false
@@ -166,12 +208,16 @@ const edit = (index: number) => {
   HomeData.value?.forEach((item: any) => {
     item.showEdit = false
   })
+  newItem.value.name = ''
   HomeData.value[index].showEdit = true
+  nextTick(() => {
+    editRef.value.focus()
+  })
 }
 const move = () => {
   console.log('移动')
 }
-//获取所有文件
+//获取所有文件==============================================================
 const pageSize = ref(20)
 const page = ref(1)
 const getAllFile = async () => {
@@ -190,16 +236,18 @@ const getAllFile = async () => {
       file_type: item.file_type,
       folder_type: item.folder_type ? item.folder_type : 0,
       _id: item._id,
+      filePid: item.filePid ? item.filePid : 0,
       fileCover: item.file_cover ? item.file_cover : ''
     }
   })
-  console.log(HomeData.value)
 }
-//得到分页数
+//===========================================================================
+//=====================得到分页数===============================
 const pagation = ref(1)
-const getPagation = (index) => {
-  // pagation.value
+const getPagation = (index: number) => {
+  pagation.value = index
 }
+//==============================================================
 
 onMounted(() => {
   getAllFile()
@@ -254,7 +302,6 @@ onMounted(() => {
     <MyTable
       :columns="HomeColumns"
       :data="HomeData"
-      class=""
       :pagination="true"
       :page-size="15"
       :ext-height="80"
@@ -267,8 +314,7 @@ onMounted(() => {
             <div v-if="!record.showEdit" class="items-center flex">
               <!--              判断是否为图片或者音频-->
               <template v-if="record.file_type === 1 || record.file_type === 3">
-                <div>{{ index }}</div>
-                <Icon :cover="HomeData[index].fileCover"></Icon>
+                <Icon :cover="HomeData[(pagation - 1) * 15 + index].fileCover"></Icon>
               </template>
               <template v-else>
                 <!--              判断是否为folder-->
@@ -298,8 +344,8 @@ onMounted(() => {
               <Hover
                 :data="HomeHoverData"
                 @share1="share"
-                @del="del"
-                @edit="edit(index)"
+                @del="del((pagation - 1) * 15 + index)"
+                @edit="edit((pagation - 1) * 15 + index)"
                 @move="move"
               ></Hover>
             </div>

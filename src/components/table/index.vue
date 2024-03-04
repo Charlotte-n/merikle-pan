@@ -10,6 +10,10 @@ const props = defineProps<{
   add: boolean
 }>()
 
+const emits = defineEmits<{
+  (e: 'change', index: number): void
+}>()
+
 const viewportWidth = ref(window.innerHeight - 56 - 20 - 50 - props.extHeight)
 const rowSelection = ref({
   checkStrictly: false,
@@ -23,6 +27,10 @@ const rowSelection = ref({
     console.log(selected, selectedRows, changeRows)
   }
 })
+//获取页数
+const getPagination = (index: { current: number }) => {
+  emits('change', index.current)
+}
 
 // 定义一个处理视口变化的函数
 const handleResize = () => {
@@ -60,6 +68,7 @@ onMounted(() => {
       }"
       :scroll="{ y: viewportWidth - 60 }"
       rowClassName="my-row"
+      @change="getPagination"
     >
       <template #bodyCell="{ column, record, index }">
         <slot name="bodyCell" :column="column" :record="record" :index="index"></slot>
