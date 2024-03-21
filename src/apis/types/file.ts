@@ -38,7 +38,7 @@ export interface GetAllParam {
   pageSize: number
   fileType?: number | null
   fileId?: string | null
-  title?: string
+  title?: string | null
 }
 
 export interface AddFolderDataType {

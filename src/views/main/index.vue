@@ -359,7 +359,7 @@ const getAllFileparam = reactive({
   pageSize: pageSize.value,
   fileType: null,
   fileId: fileId.value,
-  title: ''
+  title: title.value ? title.value : null
 })
 const getAllFile = async () => {
   getAllFileparam.title = title.value
