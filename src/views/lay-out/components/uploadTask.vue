@@ -6,8 +6,13 @@ import { MergeApi, UploadChunkApi, VerifyStatusApi } from '@/apis/file.ts'
 import type { MergeParam, VerifyStatusParam } from '@/apis/types/file.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import { fileList, STATUS } from '@/data/upload.ts'
+import { useFileStore } from '@/stores/file.ts'
+import { inject } from 'vue'
 
+//注入
+const reload: any = inject('reload')
 const UserStore = useUserInfo()
+const FileStore = useFileStore()
 const chunkSize = 1024 * 1024
 
 const addFile = async (file: any, fileId: string | number) => {
@@ -121,7 +126,8 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
       fileHash: fileHash,
       totalCount: chunks,
       filename: file.name + '-' + chunkIndex,
-      file_type: file.type
+      file_type: file.type,
+      filePid: FileStore.filePid
     }
     const verifyStatus = await VerifyStatusApi(verifyStatusParam)
     const data = verifyStatus.data
@@ -130,6 +136,8 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
       currentFile.md5Progress = 100
       currentFile.uploadProgress = 100
       currentFile.status = STATUS.upload_seconds.value
+      //刷新重新获取文件
+      reload()
       return 0
     } else {
       //可能是断点续传或者是一个新的上传
@@ -187,10 +195,13 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
       fileHash: fileHash,
       fileSize: fileSize,
       user_id: useUserInfo().userInfo._id,
-      file_type: file.type
+      file_type: file.type,
+      filePid: FileStore.filePid as string | number
     }
     const res = await MergeApi(MergeParam)
     if (res.code === 0) {
+      //刷新重新获取文件
+      reload()
       console.log(res, '合并成功了')
     }
   }

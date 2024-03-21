@@ -5,7 +5,6 @@ import type {
   GetAllParam,
   MergeParam,
   RenameFileDataType,
-  UploadChunkOtherParam,
   UploadChunkParam,
   VerifyStatusParam
 } from '@/apis/types/file.ts'
@@ -20,7 +19,9 @@ enum BASEURL {
   ADD_FOLDER = '/file/addNewFolder',
   RENAME_FILE = '/file/rename',
   FILE_IMAGE = '/file/image',
-  DELETE_FILE = '/file/deleteFolder'
+  DELETE_FILE = '/file/deleteFolder',
+  MULTIPLE_DELETE = '/file/multipleDelete',
+  GET_FILE_INFO = '/file/fileInfo'
 }
 
 /**
@@ -74,7 +75,7 @@ export const UploadChunkApi = (
  * @constructor
  */
 export const VerifyStatusApi = (value: VerifyStatusParam) => {
-  const { fileHash, filename, totalCount, file_type } = value
+  const { fileHash, filename, totalCount, file_type, filePid } = value
   return hyRequest.get({
     url: BASEURL.VERIFY_STATUS,
     params: {
@@ -83,7 +84,8 @@ export const VerifyStatusApi = (value: VerifyStatusParam) => {
       fileHash,
       filename,
       totalCount,
-      file_type
+      file_type,
+      filePid
     }
   })
 }
@@ -95,7 +97,7 @@ export const VerifyStatusApi = (value: VerifyStatusParam) => {
  */
 
 export const MergeApi = (param: MergeParam) => {
-  const { fileHash, filename, fileSize, user_id, file_type } = param
+  const { fileHash, filename, fileSize, user_id, file_type, filePid } = param
   return hyRequest.post({
     url: BASEURL.MERGE,
     data: {
@@ -103,18 +105,22 @@ export const MergeApi = (param: MergeParam) => {
       filename,
       fileSize,
       user_id,
-      file_type
+      file_type,
+      filePid
     }
   })
 }
 
 export const getAllFileApi = (param: GetAllParam) => {
-  const { page, pageSize } = param
+  const { page, pageSize, fileType, fileId, title } = param
   return hyRequest.get<CommonResponseType<any>>({
     url: BASEURL.GET_ALL,
     params: {
       page,
-      pageSize
+      pageSize,
+      fileType,
+      fileId,
+      title
     }
   })
 }
@@ -164,5 +170,31 @@ export const deleteFileApi = (data: DeleteFileDataType) => {
   return hyRequest.post<CommonResponseType<any>>({
     url: BASEURL.DELETE_FILE,
     data
+  })
+}
+
+/**
+ * 批量删除
+ * @param ids
+ */
+export const multipleDeleteApi = (ids: string[]) => {
+  return hyRequest.post<CommonResponseType<any>>({
+    url: BASEURL.MULTIPLE_DELETE,
+    data: {
+      ids
+    }
+  })
+}
+
+/**
+ * 获取文件信息
+ * @param id
+ */
+export const getFileInfoApi = (id: string) => {
+  return hyRequest.get({
+    url: BASEURL.GET_FILE_INFO,
+    params: {
+      id
+    }
   })
 }

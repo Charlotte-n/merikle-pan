@@ -2,7 +2,7 @@
 import Avatar from '@/components/avatar/index.vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import AvatarUpload from '@/views/lay-out/components/avatar-upload.vue'
-import { computed, ref, defineExpose, nextTick } from 'vue'
+import { computed, ref, defineExpose, inject } from 'vue'
 import ChangePassword from '@/views/lay-out/components/change-password.vue'
 import LoginOut from '@/views/lay-out/components/login-out.vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
@@ -40,11 +40,11 @@ const addFile = async (value: { file: File; filePid: string }) => {
   CommonStore.uploadChangePopoverShow()
   // 等待弹窗组件渲染完成(很重要)
   await new Promise((resolve) => setTimeout(resolve, 100))
-  console.log(uploadComponent.value)
   if (uploadComponent.value?.addFile) {
     await uploadComponent.value.addFile(file, filePid)
   }
 }
+
 defineExpose({ addFile })
 </script>
 

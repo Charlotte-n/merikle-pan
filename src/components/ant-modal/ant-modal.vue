@@ -28,7 +28,7 @@ const handleOk = () => {
     class="model"
   >
     <div
-      class="border-t-[1px] border-b-[1px] border-solid border-l-0 border-r-0 border-[#DDDDDD] pt-[10px] pb-[10px] pl-[15px] pr-[10px]"
+      class="border-t-[1px] border-b-[1px] border-solid border-l-0 border-r-0 border-[#DDDDDD] pt-[10px] pb-[10px] pl-[15px] pr-[10px] max-h-[300px] overflow-auto"
     >
       <slot></slot>
     </div>

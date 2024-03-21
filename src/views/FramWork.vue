@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from '@/views/lay-out/header.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, provide, ref, watch } from 'vue'
 import { menu } from '@/data/home.ts'
 const router = useRouter()
 const route = useRoute()
@@ -31,6 +31,7 @@ watch(
 )
 const header = ref()
 let addFile = header.value?.addFile
+// let getAllFile =
 onMounted(() => {
   addFile = header.value.addFile
 })
@@ -42,6 +43,16 @@ onMounted(() => {
     isShow.value = true
   })
 })
+
+//获取实例,上传的时候更新数据
+const routerRef = ref()
+const UploadCallBackHandler = () => {
+  nextTick(() => {
+    routerRef.value.getAllFile()
+    // TODO:更新用户的空间
+  })
+}
+provide('reload', UploadCallBackHandler)
 </script>
 
 <template>
@@ -107,7 +118,7 @@ onMounted(() => {
       <RouterView v-if="isShow">
         <template v-slot="{ Component }">
           <keep-alive>
-            <component :is="Component" @addFile="addFile" v-if="true"></component>
+            <component :is="Component" @addFile="addFile" v-if="true" ref="routerRef"></component>
           </keep-alive>
         </template>
       </RouterView>

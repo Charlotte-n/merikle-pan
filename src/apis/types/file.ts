@@ -21,6 +21,7 @@ export interface VerifyStatusParam {
   totalCount: number
   filename: string
   file_type: string
+  filePid: string | number
 }
 
 export interface MergeParam {
@@ -29,17 +30,21 @@ export interface MergeParam {
   fileSize: number
   user_id: string
   file_type: number
+  filePid: string | number
 }
 
 export interface GetAllParam {
   page: number
   pageSize: number
+  fileType?: number | null
+  fileId?: string | null
+  title?: string
 }
 
 export interface AddFolderDataType {
   name: string
   fileId: string
-  filePid: number
+  filePid: number | string
   user_id?: string
 }
 
@@ -53,8 +58,6 @@ export interface RenameFileDataType {
 }
 
 export interface DeleteFileDataType {
-  filename: string
   fileId: string
-  filePid: number
   user_id?: string
 }

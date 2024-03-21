@@ -8,6 +8,7 @@ const props = defineProps<{
   pageSize?: number
   extHeight: number
   add: boolean
+  rowSelection: any
 }>()
 
 const emits = defineEmits<{
@@ -15,18 +16,6 @@ const emits = defineEmits<{
 }>()
 
 const viewportWidth = ref(window.innerHeight - 56 - 20 - 50 - props.extHeight)
-const rowSelection = ref({
-  checkStrictly: false,
-  onChange: (selectedRowKeys: (string | number)[], selectedRows: DataItem[]) => {
-    console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
-  },
-  onSelect: (record: DataItem, selected: boolean, selectedRows: DataItem[]) => {
-    console.log(record, selected, selectedRows)
-  },
-  onSelectAll: (selected: boolean, selectedRows: DataItem[], changeRows: DataItem[]) => {
-    console.log(selected, selectedRows, changeRows)
-  }
-})
 //获取页数
 const getPagination = (index: { current: number }) => {
   emits('change', index.current)
@@ -61,7 +50,7 @@ onMounted(() => {
     <a-table
       :columns="props.columns"
       :data-source="props.data"
-      :row-selection="rowSelection"
+      :row-selection="props.rowSelection"
       :pagination="pagination ? { pageSize: pageSize || 15 } : pagination"
       :style="{
         maxHeight: viewportWidth + 'px'
