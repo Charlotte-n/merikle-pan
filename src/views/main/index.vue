@@ -306,10 +306,16 @@ const getFileInfo = computed(() => {
 
 const directoryList = ref([] as GetAllDirectoryData)
 //获取文件夹的信息，打开弹窗
-const getAllDirectory = async () => {
+const getAllDirectory = async (type: string) => {
   try {
-    const res = await getAllDirectoryApi(currentId.value[0])
-    directoryList.value = res.data
+    if (type === 'single') {
+      const res = await getAllDirectoryApi(currentId.value)
+      directoryList.value = res.data
+    } else {
+      const res = await getAllDirectoryApi(ids.value)
+      directoryList.value = res.data
+    }
+
     openMove.value = true
   } catch (e) {
     console.log(e, '获取全部目录')
@@ -318,11 +324,15 @@ const getAllDirectory = async () => {
 const currentId = ref([''])
 const moveSingle = async (data: any) => {
   currentId.value = [data._id]
-  await getAllDirectory()
+  await getAllDirectory('single')
 }
 
 const moveMany = async () => {
-  await getAllDirectory()
+  await getAllDirectory('many')
+}
+//删除选中的key
+const clearSelectedKey = () => {
+  selectedRowKey.value = []
 }
 
 //==============================================
@@ -550,6 +560,8 @@ defineExpose({ getAllFile })
     <!--    移动-->
     <template v-if="openMove">
       <Move
+        @clearSelectedKey="clearSelectedKey"
+        :ids="ids"
         @getAllFile="getAllFile"
         :open="openMove"
         @close="closeMove"

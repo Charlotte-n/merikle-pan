@@ -1,8 +1,10 @@
 import hyRequest from '@/services'
+import type { CommonResponseType } from '@/apis/types/Response.ts'
 
 enum BASEURL {
   changeAvatar = '/user/upload/avatar',
-  GET_USER_INFO = '/user/info'
+  GET_USER_INFO = '/user/info',
+  GET_USER_SPACE = '/user/space'
 }
 
 /**
@@ -30,6 +32,19 @@ export const changeAvatarApi = (user_id: any, data: any) => {
     data,
     headers: {
       'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+/**
+ * 获取用户使用的空间
+ * @param userId
+ */
+export const getUserSpaceApi = (userId: string) => {
+  return hyRequest.get<CommonResponseType<{ useSpace: string; totalSpace: string }>>({
+    url: BASEURL.GET_USER_SPACE,
+    params: {
+      userId
     }
   })
 }

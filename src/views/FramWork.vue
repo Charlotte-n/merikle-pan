@@ -3,8 +3,11 @@ import Header from '@/views/lay-out/header.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { nextTick, onMounted, provide, ref, watch } from 'vue'
 import { menu } from '@/data/home.ts'
+import { getUserSpaceApi } from '@/apis/user.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserInfo()
 
 //跳转页面
 const jump = (item: any) => {
@@ -52,6 +55,15 @@ const UploadCallBackHandler = () => {
     // TODO:更新用户的空间
   })
 }
+//获取用户的使用空间
+const userSpace = ref({} as { useSpace: string; totalSpace: string })
+const getSpace = async () => {
+  const res = await getUserSpaceApi((userStore.userInfo as any)._id)
+  userSpace.value = res.data
+}
+onMounted(() => {
+  getSpace()
+})
 provide('reload', UploadCallBackHandler)
 </script>
 
@@ -83,34 +95,54 @@ provide('reload', UploadCallBackHandler)
       </div>
     </div>
     <!--    二级导航-->
-    <div class="flex-[2] left-menu-second text-center mt-[20px]">
-      <div
-        class="sub-menu h-[40px] flex justify-center m-auto cursor-pointer hover:bg-[#F3F3F3] w-[85%]"
-        style="line-height: 40px"
-        v-for="item in currentMenu.children"
-        :key="item.name"
-        @click="jump(item)"
-        :class="item.path === currentPath ? 'second-active' : ''"
-      >
+    <div class="flex-[2] left-menu-second mt-[20px] flex flex-col">
+      <div class="flex-1 text-center">
         <div
-          v-if="item.icon"
-          :class="[
-            'iconfont',
-            'icon-' + item.icon,
-            'icon mr-[20px] text-[14px]',
-            item.path === currentPath ? 'active' : ''
-          ]"
-        ></div>
-        <div class="text-[13px]" :class="item.path === currentPath ? 'active' : ''">
-          {{ item.name }}
+          class="sub-menu h-[40px] flex justify-center m-auto cursor-pointer hover:bg-[#F3F3F3] w-[85%]"
+          style="line-height: 40px"
+          v-for="item in currentMenu.children"
+          :key="item.name"
+          @click="jump(item)"
+          :class="item.path === currentPath ? 'second-active' : ''"
+        >
+          <div
+            v-if="item.icon"
+            :class="[
+              'iconfont',
+              'icon-' + item.icon,
+              'icon mr-[20px] text-[14px]',
+              item.path === currentPath ? 'active' : ''
+            ]"
+          ></div>
+          <div class="text-[13px]" :class="item.path === currentPath ? 'active' : ''">
+            {{ item.name }}
+          </div>
+        </div>
+        <div
+          v-if="currentMenu.tips"
+          class="text-[12px] pl-[10px] pr-[10px] mt-[10px] text-[#ABACAB]"
+          style="line-height: 1.5"
+        >
+          {{ currentMenu?.tips }}
         </div>
       </div>
-      <div
-        v-if="currentMenu.tips"
-        class="text-[12px] pl-[10px] pr-[10px] mt-[10px] text-[#ABACAB]"
-        style="line-height: 1.5"
-      >
-        {{ currentMenu?.tips }}
+
+      <div class="pl-[10px] mb-[20px] text-[10px]">
+        <div class="">空间的使用</div>
+        <div>
+          <a-progress
+            :percent="
+              ((Number(userSpace.useSpace) / Number(userSpace.totalSpace)) * 100).toFixed(0)
+            "
+            size="small"
+          />
+        </div>
+        <div class="flex items-center">
+          <span class="flex-1"
+            >{{ Number(userSpace.useSpace).toFixed(2) }}GB/{{ userSpace.totalSpace }}GB</span
+          >
+          <span class="iconfont icon-refresh text-[#1677FF] cursor-pointer"></span>
+        </div>
       </div>
     </div>
     <!--  右侧内容-->

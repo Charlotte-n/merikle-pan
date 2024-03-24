@@ -16,8 +16,9 @@ const props = defineProps<{
   open: boolean
   currentId: string
   data: any
+  ids: string[]
 }>()
-const emits = defineEmits(['close', 'moveFileOrDirectory', 'getAllFile'])
+const emits = defineEmits(['close', 'moveFileOrDirectory', 'getAllFile', 'clearSelectedKey'])
 const directory = ref<any>(props.data)
 //选择目录
 const navigateRef = ref()
@@ -34,7 +35,7 @@ const navChange = (data: { categoryId: string; currentFolder: string }) => {
   fileId.value = (data.currentFolder as any).fileId
   if (fileId.value) {
     //获取该目录下的目录
-    getSubCategoryApi(fileId.value).then((res) => {
+    getSubCategoryApi(fileId.value, props.ids ? props.ids : [props.currentId]).then((res) => {
       directory.value = res.data
     })
     //设置导航目录
@@ -49,7 +50,12 @@ const moveFileOrDirectory = (folderId: string) => {
     return
   }
   //进行移动
-  if (props.currentId) {
+  if (props.ids.length) {
+    //批量移动
+    MoveFileOrDirectoryApi({ ids: props.ids, filePid: folderId })
+    emits('clearSelectedKey')
+    emits('getAllFile')
+  } else {
     MoveFileOrDirectoryApi({ ids: [props.currentId], filePid: folderId })
     emits('getAllFile')
   }

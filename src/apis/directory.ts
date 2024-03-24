@@ -14,7 +14,7 @@ enum BASEURL {
  * @param userId
  * @param filePid
  */
-export const getAllDirectoryApi = (filePid: number | string) => {
+export const getAllDirectoryApi = (filePid: string[]) => {
   return hyRequest.post<CommonResponseType<GetAllDirectoryData>>({
     url: BASEURL.GET_ALL_DIRECTORY,
     data: {
@@ -48,12 +48,14 @@ export const getNavigationApi = (path: string) => {
 /**
  * 获取目录下的子目录
  * @param fileId
+ * @param ids
  */
-export const getSubCategoryApi = (fileId: string) => {
+export const getSubCategoryApi = (fileId: string, ids: string[]) => {
   return hyRequest.get<CommonResponseType<any>>({
     url: BASEURL.GET_SUBCATEGORY,
     params: {
-      fileId
+      fileId,
+      ids
     }
   })
 }
