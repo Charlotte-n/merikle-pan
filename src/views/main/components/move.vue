@@ -1,24 +1,61 @@
 <script setup lang="ts">
 import MyModel from '@/components/ant-modal/ant-modal.vue'
-import { onMounted } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import Icon from '@/components/icon/index.vue'
-import type { GetAllDirectoryData } from '@/apis/types/directory.ts'
+import Navigation from '@/components/navigation/index.vue'
+import {
+  getAllDirectoryApi,
+  getNavigationApi,
+  getSubCategoryApi,
+  MoveFileOrDirectoryApi
+} from '@/apis/directory.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
+import { message } from 'ant-design-vue'
 
 const props = defineProps<{
   open: boolean
-  data: GetAllDirectoryData
+  currentId: string
+  data: any
 }>()
-const emits = defineEmits(['close', 'moveFileOrDirectory'])
-//移动文件
-
+const emits = defineEmits(['close', 'moveFileOrDirectory', 'getAllFile'])
+const directory = ref<any>(props.data)
 //选择目录
-const selectFolder = () => {
-  console.log(123)
+const navigateRef = ref()
+const selectFolder = (data: { filename: string; fileId: string }, item: any) => {
+  console.log(item, '我获取的为')
+  navigateRef.value.openFolder(data)
 }
-onMounted(() => {
-  console.log(props.data)
-})
-//获取所有目录
+//获取目录
+const fileId = ref('')
+const currentFolder = ref()
+const category = ref([] as string[])
+const navChange = (data: { categoryId: string; currentFolder: string }) => {
+  currentFolder.value = data.categoryId
+  fileId.value = (data.currentFolder as any).fileId
+  if (fileId.value) {
+    //获取该目录下的目录
+    getSubCategoryApi(fileId.value).then((res) => {
+      directory.value = res.data
+    })
+    //设置导航目录
+    category.value.push(fileId.value)
+  }
+}
+
+//移动文件
+const moveFileOrDirectory = (folderId: string) => {
+  if (props.currentId === folderId) {
+    message.error('已经在当前目录了')
+    return
+  }
+  //进行移动
+  if (props.currentId) {
+    MoveFileOrDirectoryApi({ ids: [props.currentId], filePid: folderId })
+    emits('getAllFile')
+  }
+  //更新目录和关闭弹窗
+  emits('close')
+}
 </script>
 
 <template>
@@ -38,17 +75,34 @@ onMounted(() => {
       "
       @ok="
         () => {
-          emits('moveFileOrDirectory')
+          moveFileOrDirectory(fileId)
         }
       "
     >
       <!--      文件内容-->
       <div>
-        <div>全部文件</div>
+        <!--        <div>全部文件</div>-->
+        <Navigation @navChange="navChange" :isWatchPath="false" ref="navigateRef"></Navigation>
         <div class="">
-          <div v-for="item in data" :key="item._id" :class="['', 'flex  hover:cursor-pointer']">
-            <div :class="`w-[100%] flex items-center h-[50px] item`" @click="selectFolder">
-              <Icon :file-type="0"></Icon>
+          <div
+            v-for="item in directory"
+            :key="item._id"
+            :class="['', 'flex  hover:cursor-pointer']"
+          >
+            <div
+              :class="`w-[100%] flex items-center h-[50px] item`"
+              @click="selectFolder({ fileId: item._id, filename: item.file_name }, item)"
+            >
+              <Icon
+                :file-type="
+                  item.file_type
+                    ? item.file_type
+                    : item.folder_type
+                      ? item.folder_type - 1
+                      : item.folder_type
+                "
+              ></Icon>
+              <!--              <Icon v-else :file-type="item.file_type"></Icon>-->
               <div class="ml-[10px]">{{ item.file_name }}</div>
             </div>
           </div>

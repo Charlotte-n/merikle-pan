@@ -15,6 +15,6 @@ export interface GetSingleDirectoryData {
 
 //移动文件的请求数据
 export interface MoveFileBody {
-  fileId: string[]
-  folderId: string
+  ids: string[]
+  filePid: string
 }

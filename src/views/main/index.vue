@@ -40,6 +40,8 @@ const HomeData = ref<any>([])
 const UserStore = useUserInfo()
 
 const title = ref('')
+//获取当前的文件的id
+const currentFileId = ref('')
 
 //=====================上传================================
 const uploadHandler = async (file: any) => {
@@ -108,11 +110,13 @@ const addFolder = async (addIndex: number, index: number) => {
     }
     const param: AddFolderDataType = {
       fileId: '',
-      filePid: path.value.indexOf('/')
-        ? path.value.split('/')[path.value.split('/').length - 1]
+      filePid: path.value
+        ? path.value.indexOf('/')
           ? path.value.split('/')[path.value.split('/').length - 1]
-          : 0
-        : path.value,
+            ? path.value.split('/')[path.value.split('/').length - 1]
+            : 0
+          : path.value
+        : 0,
       name: newItem.value.name,
       user_id: UserStore.userInfo._id
     }
@@ -304,10 +308,7 @@ const directoryList = ref([] as GetAllDirectoryData)
 //获取文件夹的信息，打开弹窗
 const getAllDirectory = async () => {
   try {
-    const res = await getAllDirectoryApi(
-      UserStore.userInfo._id as string,
-      getFileInfo.value as number | string
-    )
+    const res = await getAllDirectoryApi(currentId.value[0])
     directoryList.value = res.data
     openMove.value = true
   } catch (e) {
@@ -316,28 +317,12 @@ const getAllDirectory = async () => {
 }
 const currentId = ref([''])
 const moveSingle = async (data: any) => {
-  //查询相应的文件信息，判断文件是否有file_pid来筛选目录
   currentId.value = [data._id]
   await getAllDirectory()
 }
 
 const moveMany = async () => {
   await getAllDirectory()
-}
-
-//进行移动
-const moveFileOrDirectory = (folderId: string) => {
-  if (currentId.value[0] === folderId) {
-    message.error('已经在当前目录了')
-    return
-  }
-  //进行移动
-  if (currentId.value) {
-    MoveFileOrDirectoryApi({ fileId: currentId.value, folderId: folderId })
-  } else if (ids.value.length) {
-    MoveFileOrDirectoryApi({ fileId: ids.value, folderId: folderId })
-  }
-  openMove.value = false
 }
 
 //==============================================
@@ -563,12 +548,15 @@ defineExpose({ getAllFile })
       </template>
     </MyTable>
     <!--    移动-->
-    <Move
-      :open="openMove"
-      :data="directoryList"
-      @close="closeMove"
-      @moveFileOrDirectory="moveFileOrDirectory"
-    ></Move>
+    <template v-if="openMove">
+      <Move
+        @getAllFile="getAllFile"
+        :open="openMove"
+        @close="closeMove"
+        :currentId="currentId[0]"
+        :data="directoryList"
+      ></Move>
+    </template>
   </div>
 </template>
 

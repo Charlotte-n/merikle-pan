@@ -12,7 +12,9 @@ const CommonStore = useCommonStore()
 </script>
 
 <template>
-  <RouterView></RouterView>
+  <a-spin tip="Loading..." :spinning="CommonStore.spinning">
+    <RouterView></RouterView>
+  </a-spin>
 </template>
 
 <style scoped>

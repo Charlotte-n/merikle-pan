@@ -5,7 +5,8 @@ import type { GetAllDirectoryData, MoveFileBody } from '@/apis/types/directory.t
 enum BASEURL {
   GET_ALL_DIRECTORY = '/directory/allDirectory',
   MOVE_DIRECTORY = '/directory/move',
-  GET_NAVIGATION = '/directory/getNavigation'
+  GET_NAVIGATION = '/directory/getNavigation',
+  GET_SUBCATEGORY = '/directory/subDirectory'
 }
 
 /**
@@ -13,11 +14,10 @@ enum BASEURL {
  * @param userId
  * @param filePid
  */
-export const getAllDirectoryApi = (userId: string, filePid: number | string) => {
-  return hyRequest.get<CommonResponseType<GetAllDirectoryData>>({
+export const getAllDirectoryApi = (filePid: number | string) => {
+  return hyRequest.post<CommonResponseType<GetAllDirectoryData>>({
     url: BASEURL.GET_ALL_DIRECTORY,
-    params: {
-      userId,
+    data: {
       filePid
     }
   })
@@ -42,5 +42,18 @@ export const MoveFileOrDirectoryApi = (data: MoveFileBody) => {
 export const getNavigationApi = (path: string) => {
   return hyRequest.get<CommonResponseType<{ path: string }>>({
     url: BASEURL.GET_NAVIGATION + '?path=' + path
+  })
+}
+
+/**
+ * 获取目录下的子目录
+ * @param fileId
+ */
+export const getSubCategoryApi = (fileId: string) => {
+  return hyRequest.get<CommonResponseType<any>>({
+    url: BASEURL.GET_SUBCATEGORY,
+    params: {
+      fileId
+    }
   })
 }

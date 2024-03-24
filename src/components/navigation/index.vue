@@ -31,6 +31,7 @@ const openFolder = (data: { filename: string; fileId: number | string }) => {
 const setPath = () => {
   if (!props.isWatchPath) {
     //不监听路由
+    doCallBack()
     return
   }
   //监听路由,将文件的id放入里面
@@ -69,6 +70,7 @@ const backParent = () => {
 //获取目录导航
 const resultNavigation = ref()
 const getNavigation = async (path: string) => {
+  console.log(path)
   const res = await getNavigationApi(path)
   resultNavigation.value = res.data.path.split('/')
 }
@@ -79,6 +81,10 @@ const doCallBack = () => {
     categoryId: (route.params as { category: string }).category,
     currentFolder: currentFolder.value
   })
+  console.log(FolderList.value)
+  FolderList.value &&
+    FolderList.value.length > 0 &&
+    getNavigation(FolderList.value.map((item) => item.fileId).join('/'))
   //改变FilePid
   useFileStore().changeFilePid(currentFolder.value.fileId as string)
 }
@@ -121,7 +127,8 @@ watch(
 )
 
 defineExpose({
-  openFolder
+  openFolder,
+  getNavigation
 })
 </script>
 

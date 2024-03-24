@@ -35,7 +35,7 @@ class HYRequest {
           }
         }
         //loading
-        if (config.showLoading) {
+        if (config.showLoading === undefined) {
           CommonStore.openSpinning()
         } else {
           CommonStore.closeSpinning()
@@ -53,7 +53,7 @@ class HYRequest {
       (res: any) => {
         const CommonStore = useCommonStore()
         const { showLoading } = res.config
-        if (showLoading) {
+        if (res.config.showLoading === undefined) {
           CommonStore.closeSpinning()
         }
         if (res.data.data?.token) {
