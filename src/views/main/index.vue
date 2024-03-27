@@ -28,10 +28,11 @@ import { message, Modal } from 'ant-design-vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import type { Key } from 'ant-design-vue/es/_util/type'
 import Move from '@/views/main/components/move.vue'
-import { getAllDirectoryApi, MoveFileOrDirectoryApi } from '@/apis/directory.ts'
-import type { GetAllDirectoryData, MoveFileBody } from '@/apis/types/directory.ts'
+import { getAllDirectoryApi } from '@/apis/directory.ts'
+import type { GetAllDirectoryData } from '@/apis/types/directory.ts'
 import Navigation from '@/components/navigation/index.vue'
 import { controlFileType } from '@/data/upload.ts'
+import Preview from '@/components/preview/Preview.vue'
 
 const route = useRoute()
 const currentSecondMenuCategory = ref()
@@ -40,8 +41,6 @@ const HomeData = ref<any>([])
 const UserStore = useUserInfo()
 
 const title = ref('')
-//获取当前的文件的id
-const currentFileId = ref('')
 
 //=====================上传================================
 const uploadHandler = async (file: any) => {
@@ -389,6 +388,7 @@ onMounted(() => {
 
 //============================预览===================================
 const navigationRef = ref()
+const PreviewRef = ref()
 const handlePreview = (record: any) => {
   //是目录
   if (record.folder_type === 1) {
@@ -396,7 +396,10 @@ const handlePreview = (record: any) => {
       filename: record.name,
       fileId: record._id
     })
+    return
   }
+  //返回图片
+  PreviewRef.value.showPreviewImage(record)
 }
 const navChange = (data: { categoryId: number; currentFolder: { fileId: string } }) => {
   const { currentFolder } = data
@@ -570,6 +573,9 @@ defineExpose({ getAllFile })
       ></Move>
     </template>
   </div>
+  <!-- 显示放大的图片 -->
+
+  <Preview ref="PreviewRef"></Preview>
 </template>
 
 <style scoped lang="scss">

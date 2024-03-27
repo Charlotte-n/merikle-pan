@@ -21,6 +21,10 @@ app.component('Modal', Modal)
 app.component('Avatar', Avatar)
 app.component('MyTable', Table)
 app.component('Hover', Hover)
+app.config.globalProperties.globalInfo = {
+  imageUrl: 'http://localhost:3000/static/'
+}
+
 app.use(pinia)
 app.use(Antd)
 app.use(router)
