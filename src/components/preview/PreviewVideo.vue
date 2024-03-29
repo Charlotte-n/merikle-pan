@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="player" id="dplayer"></div>
+  <div ref="player"></div>
 </template>
 
 <style scoped lang="scss"></style>

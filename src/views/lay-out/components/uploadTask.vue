@@ -61,6 +61,7 @@ const computedMd5 = (fileItem: SingleFileStatus): any => {
   let blobSlice = file.slice || file.mozSlice || file.webkitSlice
   //进行切分,总的切片数目,应该向上取整
   const chunks = Math.ceil(file.size / chunkSize)
+  console.log(chunks)
   let currentIndex = 0
   const spark = new SparkMD5.ArrayBuffer()
   //读取文件
@@ -156,16 +157,17 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     if (currentFile.pause) {
       break
     }
+    console.log(file, chunkIndex)
     //进行切分循环上传
     const start = i * chunkSize
-    const end = start + chunkSize > fileSize ? fileSize : start + chunkSize
+    const end = start + chunkSize > fileSize ? fileSize + 1 : start + chunkSize
     //需要上传的内容
     const fileChunk = file.slice(start, end)
     //上传内容
     const ruleForm = {
       chunkIndex: i,
       fileHash: fileHash,
-      filename: file.name + '-' + chunkIndex,
+      filename: file.name + '-' + i,
       file_type: file.type
     }
     const otherForm = {

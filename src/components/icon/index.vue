@@ -7,7 +7,15 @@ const props = defineProps({
   },
   cover: String,
   iconName: String,
-  getImage: Function
+  getImage: Function,
+  width: {
+    type: String,
+    default: '30'
+  },
+  height: {
+    type: String,
+    default: '30'
+  }
 })
 
 const FileType = {
@@ -25,7 +33,6 @@ const FileType = {
 }
 
 const getImage = () => {
-  console.log(props.cover)
   if (props.cover) {
     //获取文件图片的路径
     return 'http://localhost:3000/statics/' + props.cover
@@ -35,7 +42,6 @@ const getImage = () => {
     icon = props.iconName
   } else {
     const iconMap = (FileType as any)[props.fileType]
-    console.log(iconMap)
     if (iconMap != undefined) {
       icon = iconMap.icon
     }
@@ -46,7 +52,14 @@ const getImage = () => {
 
 <template>
   <span>
-    <img :src="getImage()" alt="" class="w-[30px] h-[30px]" />
+    <img
+      :src="getImage()"
+      alt=""
+      :style="{
+        width: width + 'px',
+        height: height + 'px'
+      }"
+    />
   </span>
 </template>
 

@@ -33,7 +33,6 @@ const resizeWindow = () => {
   windowWith.value = window.innerWidth
 }
 onMounted(() => {
-  console.log('文件名字为')
   window.addEventListener('resize', resizeWindow)
 })
 onUnmounted(() => {
@@ -53,7 +52,7 @@ onUnmounted(() => {
       class="window_content"
       :style="{ width: windowContentWidth + 'px', top: 0, left: windowContentLeft + 'px' }"
     >
-      <div class="title">{{ props.title }}</div>
+      <div class="title pt-[10px] pb-[10px]">{{ props.title }}</div>
       <div class="content_body m-auto text-center flex justify-center mt-[10px]">
         <slot></slot>
       </div>
@@ -94,6 +93,7 @@ onUnmounted(() => {
     z-index: 202;
     .title {
       text-align: center;
+      border-bottom: 1px solid #cccccc;
     }
     .content_body {
       display: flex;
