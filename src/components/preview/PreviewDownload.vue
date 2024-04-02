@@ -6,7 +6,6 @@ const props = defineProps<{
 }>()
 //一种下载文件的方法
 const download = () => {
-  console.log(props.fileCover)
   window.location.href = imageUrlBase + props.fileInfo.fileCover
 }
 </script>

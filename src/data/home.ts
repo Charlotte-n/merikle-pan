@@ -143,25 +143,35 @@ export const HomeData = ref<DataItem[]>([
     showEdit: false
   }
 ])
-export const HomeHoverData = [
+export const HomeHoverData = ref([
   {
     key: 0,
     icon: 'share1',
-    text: '分享'
+    text: '分享',
+    show: true
   },
   {
     key: 1,
     icon: 'del',
-    text: '删除'
+    text: '删除',
+    show: true
   },
   {
     key: 2,
     icon: 'edit',
-    text: '重命名'
+    text: '重命名',
+    show: true
   },
   {
     key: 4,
     icon: 'move',
-    text: '移动'
+    text: '移动',
+    show: true
+  },
+  {
+    key: 5,
+    icon: 'download',
+    text: '下载',
+    show: false
   }
-]
+])

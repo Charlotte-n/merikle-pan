@@ -33,6 +33,8 @@ import type { GetAllDirectoryData } from '@/apis/types/directory.ts'
 import Navigation from '@/components/navigation/index.vue'
 import { controlFileType } from '@/data/upload.ts'
 import Preview from '@/components/preview/Preview.vue'
+import { imageUrlBase } from '@/data/common.ts'
+import ShareFile from '@/views/main/components/ShareFile.vue'
 
 const route = useRoute()
 const currentSecondMenuCategory = ref()
@@ -194,7 +196,6 @@ const selectedRowKey = ref<any>([])
 const rowSelection = ref({
   selectedRowKeys: selectedRowKey,
   onChange: (selectedRowKeys: Key[]) => {
-    console.log(selectedRowKeys)
     selectedRowKey.value = selectedRowKeys
   },
   onSelect: (record: DataItem, selected: boolean, selectedRows: DataItem[]) => {
@@ -239,8 +240,14 @@ const multipleDelete = () => {
 //========================================================
 
 //=========================分享===============================
-const share = () => {
-  console.log('分享')
+const showShare = ref(false)
+const shareFile = ref()
+const closeShare = () => {
+  showShare.value = false
+}
+const share = (fileInfo: any) => {
+  showShare.value = true
+  shareFile.value = fileInfo
 }
 //============================================================
 
@@ -409,6 +416,14 @@ const navChange = (data: { categoryId: number; currentFolder: { fileId: string }
   getAllFile()
 }
 
+//#region下载
+const download = (fileInfo: any) => {
+  HomeHoverData.value[5].show = !fileInfo.folder_type
+  window.location.href = imageUrlBase + fileInfo.fileCover
+}
+
+//endregion
+
 watch(
   () => route,
   (newValue) => {
@@ -550,10 +565,12 @@ defineExpose({ getAllFile })
             <div style="display: none" class="hover-v1" v-if="!record.showEdit">
               <Hover
                 :data="HomeHoverData"
-                @share1="share"
+                :fileInfo="record"
+                @share1="share(record)"
                 @del="del((pagation - 1) * 15 + index)"
                 @edit="edit((pagation - 1) * 15 + index)"
                 @move="moveSingle(record)"
+                @download="download(record)"
               ></Hover>
             </div>
           </div>
@@ -574,8 +591,15 @@ defineExpose({ getAllFile })
     </template>
   </div>
   <!-- 显示放大的图片 -->
-
   <Preview ref="PreviewRef"></Preview>
+  <!--  显示分享Modal-->
+  <ShareFile
+    :show="showShare"
+    :file-name="shareFile && shareFile.name"
+    :file-cover="shareFile && shareFile.fileCover"
+    @close="closeShare"
+    :file-id="shareFile && shareFile._id"
+  ></ShareFile>
 </template>
 
 <style scoped lang="scss">

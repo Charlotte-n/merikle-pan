@@ -149,9 +149,7 @@ provide('reload', UploadCallBackHandler)
     <div class="flex-[10]">
       <RouterView v-if="isShow">
         <template v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component" @addFile="addFile" v-if="true" ref="routerRef"></component>
-          </keep-alive>
+          <component :is="Component" @addFile="addFile" v-if="true" ref="routerRef"></component>
         </template>
       </RouterView>
     </div>
