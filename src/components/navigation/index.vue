@@ -70,7 +70,6 @@ const backParent = () => {
 //获取目录导航
 const resultNavigation = ref()
 const getNavigation = async (path: string) => {
-  console.log(path)
   const res = await getNavigationApi(path)
   resultNavigation.value = res.data.path.split('/')
 }
@@ -81,7 +80,6 @@ const doCallBack = () => {
     categoryId: (route.params as { category: string }).category,
     currentFolder: currentFolder.value
   })
-  console.log(FolderList.value)
   FolderList.value &&
     FolderList.value.length > 0 &&
     getNavigation(FolderList.value.map((item) => item.fileId).join('/'))

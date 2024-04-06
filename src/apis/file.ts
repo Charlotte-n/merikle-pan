@@ -176,12 +176,14 @@ export const deleteFileApi = (data: DeleteFileDataType) => {
 /**
  * 批量删除
  * @param ids
+ * @param time
  */
-export const multipleDeleteApi = (ids: string[]) => {
+export const multipleDeleteApi = (ids: string[], time: string) => {
   return hyRequest.post<CommonResponseType<any>>({
     url: BASEURL.MULTIPLE_DELETE,
     data: {
-      ids
+      ids,
+      time
     }
   })
 }

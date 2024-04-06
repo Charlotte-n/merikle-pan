@@ -23,7 +23,6 @@ const directory = ref<any>(props.data)
 //选择目录
 const navigateRef = ref()
 const selectFolder = (data: { filename: string; fileId: string }, item: any) => {
-  console.log(item, '我获取的为')
   navigateRef.value.openFolder(data)
 }
 //获取目录

@@ -2,8 +2,9 @@ import { defineStore } from 'pinia'
 
 export const useUserInfo = defineStore('userInfoStore', {
   state: () => ({
-    userInfo: {},
-    token: ''
+    userInfo: {} as { _id: string },
+    token: '',
+    space: {} as { useSpace: string; totalSpace: string }
   }),
   actions: {
     updateToken(value: string) {
@@ -15,9 +16,12 @@ export const useUserInfo = defineStore('userInfoStore', {
     //退出登录
     logOut() {
       this.token = ''
+    },
+    changeUserSpace(value: { useSpace: string; totalSpace: string }) {
+      this.space = value
     }
   },
   persist: {
-    paths: ['userInfo', 'token']
+    paths: ['userInfo', 'token', 'space']
   }
 })

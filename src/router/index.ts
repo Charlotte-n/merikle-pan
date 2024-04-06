@@ -93,6 +93,16 @@ const router = createRouter({
           }
         }
       ]
+    },
+    {
+      path: '/shareCheck/:shareId',
+      name: 'outShareCheck',
+      component: () => import('@/views/out-share/c-pages/check-share/CheckShare.vue')
+    },
+    {
+      path: '/share/:shareId',
+      name: 'shareId',
+      component: () => import('@/views/out-share/c-pages/share/OutShare.vue')
     }
   ]
 })

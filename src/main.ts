@@ -14,6 +14,7 @@ import Table from '@/components/table/index.vue'
 import Hover from '@/components/hover/index.vue'
 import pinia from '@/stores/index.ts'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import Navigation from '@/components/navigation/index.vue'
 const app = createApp(App)
 
 pinia.use(piniaPluginPersistedstate)
@@ -21,6 +22,7 @@ app.component('Modal', Modal)
 app.component('Avatar', Avatar)
 app.component('MyTable', Table)
 app.component('Hover', Hover)
+app.component('Navigation', Navigation)
 app.config.globalProperties.globalInfo = {
   imageUrl: 'http://localhost:3000/static/'
 }

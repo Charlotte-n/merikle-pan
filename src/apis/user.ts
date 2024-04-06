@@ -39,12 +39,16 @@ export const changeAvatarApi = (user_id: any, data: any) => {
 /**
  * 获取用户使用的空间
  * @param userId
+ * @param type
+ * @param fileSize
  */
-export const getUserSpaceApi = (userId: string) => {
+export const getUserSpaceApi = (userId: string, type?: number, fileSize?: number[]) => {
   return hyRequest.get<CommonResponseType<{ useSpace: string; totalSpace: string }>>({
     url: BASEURL.GET_USER_SPACE,
     params: {
-      userId
+      userId,
+      fileSize,
+      type
     }
   })
 }

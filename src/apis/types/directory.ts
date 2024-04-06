@@ -11,6 +11,7 @@ export interface GetSingleDirectoryData {
   folder_type: number
   del_flag: number
   user: string
+  file_type: string | number
 }
 
 //移动文件的请求数据

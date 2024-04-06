@@ -178,7 +178,6 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
     }
     const formData = new FormData()
     formData.append('file', fileChunk)
-
     await UploadChunkApi(formData, ruleForm, otherForm)
     if (chunks === i - 1) {
       currentFile.status = STATUS.upload_finish.value

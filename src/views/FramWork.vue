@@ -56,10 +56,9 @@ const UploadCallBackHandler = () => {
   })
 }
 //获取用户的使用空间
-const userSpace = ref({} as { useSpace: string; totalSpace: string })
 const getSpace = async () => {
   const res = await getUserSpaceApi((userStore.userInfo as any)._id)
-  userSpace.value = res.data
+  userStore.changeUserSpace(res.data)
 }
 onMounted(() => {
   getSpace()
@@ -132,14 +131,19 @@ provide('reload', UploadCallBackHandler)
         <div>
           <a-progress
             :percent="
-              ((Number(userSpace.useSpace) / Number(userSpace.totalSpace)) * 100).toFixed(0)
+              (
+                (Number(userStore.space.useSpace) / Number(userStore.space.totalSpace)) *
+                100
+              ).toFixed(0)
             "
             size="small"
           />
         </div>
         <div class="flex items-center">
           <span class="flex-1"
-            >{{ Number(userSpace.useSpace).toFixed(2) }}GB/{{ userSpace.totalSpace }}GB</span
+            >{{ Number(userStore.space.useSpace).toFixed(2) }}GB/{{
+              userStore.space.totalSpace
+            }}GB</span
           >
           <span class="iconfont icon-refresh text-[#1677FF] cursor-pointer"></span>
         </div>

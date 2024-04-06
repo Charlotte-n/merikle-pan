@@ -8,15 +8,15 @@ import { useUserInfo } from '@/stores/userInfo.ts'
 import moment from 'moment'
 import Icon from '@/components/icon/index.vue'
 import useClipboard from 'vue-clipboard3'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase, UrlBase } from '@/data/common.ts'
 import { message } from 'ant-design-vue'
-import type { DataItem } from '@/data/home.ts'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const selectedRowKey = ref<any>([])
 const selectIds = ref<any>()
 const rowSelection = ref({
   selectedRowKeys: selectedRowKey,
   onChange: (selectedRowKeys: Key[]) => {
-    console.log(selectedRowKeys)
     selectedRowKey.value = selectedRowKeys
   },
   onSelect: (record: any, selected: boolean, selectedRows: any) => {
@@ -30,7 +30,7 @@ const userStore = useUserInfo()
 
 const { toClipboard } = useClipboard()
 const link = async (fileInfo: any) => {
-  await toClipboard(`链接为${imageUrlBase + fileInfo.filePath},提取码为${fileInfo.code}`)
+  await toClipboard(`链接为:${UrlBase + 'shareCheck/' + fileInfo.fileId},提取码为${fileInfo.code}`)
   message.success('复制成功')
 }
 const cancel = async (fileInfo: any) => {
@@ -62,17 +62,20 @@ const shareList = ref()
 const getShareList = async () => {
   const res = await getShareFileListApi((userStore.userInfo as any)._id)
   const data = res.data.map((item, index) => {
-    return {
-      id: item.id,
-      key: index,
-      name: item.fileName,
-      time: moment(Number(item.createTime)).format('YYYY-MM-DD'),
-      unValid: item.validTime,
-      number: item.viewCount,
-      fileType: item.fileType,
-      folderType: item.folderType,
-      filePath: item.filePath,
-      code: item.code
+    if (item) {
+      return {
+        id: item.id,
+        key: index,
+        name: item.fileName,
+        time: moment(Number(item.createTime)).format('YYYY-MM-DD'),
+        unValid: item.validTime,
+        number: item.viewCount,
+        fileType: item.fileType,
+        folderType: item.folderType,
+        filePath: item.filePath,
+        code: item.code,
+        fileId: item.fileId
+      }
     }
   })
   shareList.value = data
@@ -110,7 +113,7 @@ onMounted(() => {
             <div class="flex justify-between items-center">
               <div class="items-center flex cursor-pointer">
                 <!--              判断是否为图片或者音频-->
-                <template v-if="record.fileType == 1 || record.fileType == 3">
+                <template v-if="record.file_type === 1 || record.file_type === 3">
                   <Icon></Icon>
                 </template>
                 <template v-else>
@@ -119,7 +122,7 @@ onMounted(() => {
                   <Icon v-if="record.folderType == 1" :file-type="0"></Icon>
                 </template>
                 <div class="ml-[10px] cursor-pointer">
-                  {{ record.name }}
+                  {{ (record as any).name }}
                 </div>
               </div>
             </div>

@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import AntModal from '@/components/ant-modal/ant-modal.vue'
-import { reactive, ref } from 'vue'
-import { imageUrlBase } from '../../../data/common.ts'
+import { onMounted, reactive, ref } from 'vue'
+import { imageUrlBase, UrlBase } from '../../../data/common.ts'
 import type { ShareLinkParam } from '@/apis/types/share.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import { createShareLinkApi } from '@/apis/share.ts'
 import useClipboard from 'vue-clipboard3'
 import { message } from 'ant-design-vue'
+import { useRoute } from 'vue-router'
 const { toClipboard } = useClipboard()
 const props = defineProps<{
   fileName: string
@@ -17,9 +18,10 @@ const props = defineProps<{
 const emits = defineEmits(['close'])
 const showLink = ref(false)
 const formRef = ref()
+const route = useRoute()
 
 const copy = async () => {
-  await toClipboard(`链接: ${imageUrlBase + props.fileCover} , 提取码:${code.value}`)
+  await toClipboard(`链接: ${UrlBase + '/' + 'shareCheck/' + props.fileId} , 提取码:${code.value}`)
   message.success('复制成功')
 }
 //确定按钮
@@ -84,6 +86,9 @@ const createShareLink = async () => {
     console.log(e, '创建分享链接出错了createShareLinkApi')
   }
 }
+onMounted(() => {
+  console.log(route)
+})
 </script>
 
 <template>
@@ -135,7 +140,7 @@ const createShareLink = async () => {
             <div>文件 {{ props.fileName }}</div>
           </a-form-item>
           <a-form-item>
-            <div>分享链接 {{ imageUrlBase + props.fileCover }}</div>
+            <div>分享链接 {{ UrlBase + 'shareCheck/' + fileId }}</div>
           </a-form-item>
           <a-form-item>
             <div>提取码 {{ code }}</div>

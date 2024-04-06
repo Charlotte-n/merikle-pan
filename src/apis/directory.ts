@@ -14,7 +14,7 @@ enum BASEURL {
  * @param userId
  * @param filePid
  */
-export const getAllDirectoryApi = (filePid: string[]) => {
+export const getAllDirectoryApi = (filePid: string[] | number) => {
   return hyRequest.post<CommonResponseType<GetAllDirectoryData>>({
     url: BASEURL.GET_ALL_DIRECTORY,
     data: {

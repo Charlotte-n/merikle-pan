@@ -37,7 +37,7 @@ const emit = defineEmits<{
       class="pr-[5px] text-[12px] text-[#06A7FF] cursor-pointer"
       @click="
         () => {
-          ;(emit as any)(['download'])
+          emit('download')
         }
       "
     >

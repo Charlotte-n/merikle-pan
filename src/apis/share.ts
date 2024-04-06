@@ -1,11 +1,13 @@
 import hyRequest from '@/services'
 import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type { ShareLinkData, ShareLinkParam } from '@/apis/types/share.ts'
+import type { ShareInfoData, ShareLinkData, ShareLinkParam } from '@/apis/types/share.ts'
 
 enum BASEURL {
   CREATE_SHARE_LINK = '/share/link',
   SHARE_LIST = '/share/list',
-  CANCEL_LIST = '/share/cancel'
+  CANCEL_LIST = '/share/cancel',
+  SHARE_INFO = '/share/getShare',
+  OUT_SHARE_LIST = '/share/getShareList'
 }
 
 /**
@@ -46,6 +48,32 @@ export const cancelShareFileApi = (ids: string[]) => {
     url: BASEURL.CANCEL_LIST,
     data: {
       ids
+    }
+  })
+}
+
+/**
+ * 获取分享信息
+ * @param fileId
+ */
+export const getShareInfoApi = (fileId: string) => {
+  return hyRequest.get<CommonResponseType<ShareInfoData>>({
+    url: BASEURL.SHARE_INFO,
+    params: {
+      fileId
+    }
+  })
+}
+
+/**
+ * 外部分享列表
+ * @param fileId
+ */
+export const getOutShareListApi = (fileId: string) => {
+  return hyRequest.get({
+    url: BASEURL.OUT_SHARE_LIST,
+    params: {
+      fileId
     }
   })
 }

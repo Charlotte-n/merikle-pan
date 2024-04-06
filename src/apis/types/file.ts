@@ -60,4 +60,5 @@ export interface RenameFileDataType {
 export interface DeleteFileDataType {
   fileId: string
   user_id?: string
+  time: string
 }

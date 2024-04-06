@@ -218,7 +218,7 @@ const multipleDelete = () => {
       okType: 'danger',
       cancelText: '取消',
       onOk() {
-        multipleDeleteApi(ids.value).then(async (res) => {
+        multipleDeleteApi(ids.value, new Date().toString()).then(async (res) => {
           if (res.code === 0) {
             selectedRowKey.value = []
             message.success('删除成功')
@@ -255,7 +255,8 @@ const share = (fileInfo: any) => {
 const del = async (index: number) => {
   //删除文件夹
   const param = ref<DeleteFileDataType>({
-    fileId: HomeData.value[index]._id
+    fileId: HomeData.value[index]._id,
+    time: new Date().toString()
   })
   const res = await deleteFileApi(param.value)
   if (res.code === 0) {
@@ -418,7 +419,7 @@ const navChange = (data: { categoryId: number; currentFolder: { fileId: string }
 
 //#region下载
 const download = (fileInfo: any) => {
-  HomeHoverData.value[5].show = !fileInfo.folder_type
+  // HomeHoverData.value[5].show = !fileInfo.folder_type
   window.location.href = imageUrlBase + fileInfo.fileCover
 }
 
