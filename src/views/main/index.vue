@@ -449,7 +449,8 @@ const handleSearch = () => {
 
 const acceptFile = computed(() => {
   const categoryItem = (controlFileType as any)[(route.params as any).category]
-  return categoryItem.accept ? categoryItem.accept : '*'
+  console.log(categoryItem)
+  return categoryItem ? categoryItem.accept : '*'
 })
 defineExpose({ getAllFile })
 </script>
