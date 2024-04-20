@@ -4,6 +4,9 @@ import './style/base.scss'
 import App from './App.vue'
 import router from './router'
 import Antd from 'ant-design-vue'
+import 'quill/dist/quill.core.css' // 引入样式
+import 'quill/dist/quill.snow.css' // snow theme
+import 'quill/dist/quill.bubble.css' // bubble theme
 import 'ant-design-vue/dist/reset.css'
 import 'normalize.css'
 import '@/assets/icon/iconfont.css'

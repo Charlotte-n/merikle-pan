@@ -13,6 +13,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'change', index: number): void
+  (e: 'rowClick', id: number): void
 }>()
 
 const viewportWidth = ref(window.innerHeight - 56 - 20 - 50 - props.extHeight)
@@ -43,6 +44,15 @@ watch(viewportWidth, (newVal, oldVal) => {
 onMounted(() => {
   console.log(props.data)
 })
+const handleClick = (record, index) => {
+  return {
+    onClick: () => {
+      if (record.category) {
+        emits('rowClick', 123)
+      }
+    }
+  }
+}
 </script>
 
 <template>
@@ -58,6 +68,7 @@ onMounted(() => {
       :scroll="{ y: viewportWidth - 60 }"
       rowClassName="my-row"
       @change="getPagination"
+      :customRow="handleClick"
     >
       <template #bodyCell="{ column, record, index }">
         <slot name="bodyCell" :column="column" :record="record" :index="index"></slot>

@@ -84,7 +84,7 @@ const add = async (index: number) => {
   }
   addStatus.value = true
   HomeData.value.splice(index, 0, newItem.value)
-  nextTick(() => {
+  await nextTick(() => {
     editRef.value.focus()
   })
 }
@@ -198,12 +198,12 @@ const rowSelection = ref({
   onChange: (selectedRowKeys: Key[]) => {
     selectedRowKey.value = selectedRowKeys
   },
-  onSelect: (record: DataItem, selected: boolean, selectedRows: DataItem[]) => {
+  onSelect: (record: DataItem, selected: boolean, selectedRows: any) => {
     //存储id,一个一个的选择
-    ids.value = selectedRows.map((selectedRow) => selectedRow._id)
+    ids.value = selectedRows.map((selectedRow: any) => (selectedRow as { _id: string })._id)
   },
-  onSelectAll: (selected: boolean, selectedRows: DataItem[], changeRows: DataItem[]) => {
-    ids.value = selectedRows.map((selectedRow) => selectedRow._id)
+  onSelectAll: (selected: boolean, selectedRows: any) => {
+    ids.value = selectedRows.map((selectedRow: any) => (selectedRow as { _id: string })._id)
   }
 })
 
@@ -301,15 +301,15 @@ const closeMove = () => {
   openMove.value = false
 }
 //获取文件的信息,查询出id来
-const getFileInfo = computed(() => {
-  return (
-    HomeData.value
-      .filter((item: any) => {
-        return item._id === ids.value[0]
-      })
-      .map((am: any) => am.filePid) as string
-  )[0]
-})
+// const getFileInfo = computed(() => {
+//   return (
+//     HomeData.value
+//       .filter((item: any) => {
+//         return item._id === ids.value[0]
+//       })
+//       .map((am: any) => am.filePid) as string
+//   )[0]
+// })
 
 const directoryList = ref([] as GetAllDirectoryData)
 //获取文件夹的信息，打开弹窗
@@ -449,7 +449,6 @@ const handleSearch = () => {
 
 const acceptFile = computed(() => {
   const categoryItem = (controlFileType as any)[(route.params as any).category]
-  console.log(categoryItem)
   return categoryItem ? categoryItem.accept : '*'
 })
 defineExpose({ getAllFile })
@@ -546,7 +545,7 @@ defineExpose({ getAllFile })
                 <Icon v-if="record.folder_type === 1" :file-type="0"></Icon>
               </template>
               <div class="ml-[10px] cursor-pointer">
-                {{ record.name }}
+                {{ (record as any).name }}
               </div>
             </div>
             <div v-if="record.showEdit" class="flex justify-center items-center">
@@ -612,6 +611,7 @@ defineExpose({ getAllFile })
     }
   }
 }
+
 .confirm,
 .close {
   &:hover {

@@ -87,6 +87,19 @@ export const menu = [
         path: '/settings/fileList'
       }
     ]
+  },
+  {
+    name: '多人协作',
+    menuCode: 'cooperation',
+    allowShow: true,
+    icon: 'doc',
+    path: '/commonFile/our',
+    children: [
+      {
+        name: '我的文档',
+        path: '/commonFile/our'
+      }
+    ]
   }
 ]
 

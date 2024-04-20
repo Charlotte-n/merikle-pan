@@ -4,6 +4,7 @@ import { useUserInfo } from '@/stores/userInfo.ts'
 import Message from '@/components/message'
 import { markRaw } from 'vue'
 
+const CommonFile = () => import('@/views/ShareFile/index.vue')
 const FramWork = () => import('@/views/FramWork.vue')
 //main
 const Main = () => import('@/views/main/index.vue')
@@ -91,6 +92,16 @@ const router = createRouter({
             needLogin: true,
             menuCode: 'setting'
           }
+        },
+        {
+          path: '/commonFile/our',
+          name: '多人协作',
+          component: CommonFile,
+          meta: {
+            allowShow: true,
+            needLogin: true,
+            menuCode: 'cooperation'
+          }
         }
       ]
     },
@@ -103,6 +114,11 @@ const router = createRouter({
       path: '/share/:shareId',
       name: 'shareId',
       component: () => import('@/views/out-share/c-pages/share/OutShare.vue')
+    },
+    {
+      path: '/commonWord/:id',
+      name: 'commonWord',
+      component: () => import('@/views/ShareFile/c-pages/common-word/index.vue')
     }
   ]
 })
