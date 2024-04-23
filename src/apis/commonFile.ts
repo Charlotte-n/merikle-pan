@@ -3,7 +3,7 @@ import hyRequest from '@/services'
 import type { CommonResponseType } from '@/apis/types/Response.ts'
 
 enum BASEURL {
-  CREATE_FILE = '/commonFile/uploadContent',
+  CREATE_FILE = '/commonFile/uploadFileContent',
   GET_FILE_LIST = '/commonFile/getFileList',
   UPDATE_FILE_CONTENT = '/commonFile/updateFileContent',
   GET_FILE_CONTENT = '/commonFile/getFileContent'
@@ -42,7 +42,7 @@ export const GetFileListApi = (userId: string) => {
  * @param data
  * @constructor
  */
-export const UpdateFileContent = (data: { id: string; content: string }) => {
+export const UpdateFileContentApi = (data: { id: string; content: string }) => {
   const { id, content } = data
   return hyRequest.post<CommonResponseType<any>>({
     url: BASEURL.UPDATE_FILE_CONTENT,
@@ -57,10 +57,11 @@ export const UpdateFileContent = (data: { id: string; content: string }) => {
  * 获取文件内容
  * @param id
  */
-export const getFileContent = (id: string) => {
+export const GetFileContentApi = (id: string) => {
   return hyRequest.get<
     CommonResponseType<{
       content: string
+      title: string
     }>
   >({
     url: BASEURL.GET_FILE_CONTENT,

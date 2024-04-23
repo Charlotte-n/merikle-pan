@@ -21,6 +21,7 @@
     "crypto-js": "^4.2.0",
     "docx-preview": "^0.3.0",
     "dplayer": "^1.27.1",
+    "html-to-docx": "^1.8.0",
     "mitt": "^3.0.1",
     "moment": "^2.30.1",
     "normalize.css": "^8.0.1",

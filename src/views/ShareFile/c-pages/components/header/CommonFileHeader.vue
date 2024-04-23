@@ -5,6 +5,9 @@ import { getImage } from '@/util/getImage.ts'
 
 const UserStore = useUserInfo()
 const avatar = ref('')
+const props = defineProps<{
+  title: string
+}>()
 onMounted(() => {
   avatar.value = getImage(UserStore.userInfo.avatar)
 })
@@ -20,7 +23,7 @@ onMounted(() => {
           class="h-[20px] w-[20px] cursor-pointer"
         />
         <div class="w-[1px] h-[10px] bg-[#cccccc] ml-[10px] mr-[10px]"></div>
-        <div class="text-[15px]">医保</div>
+        <div class="text-[15px]">{{ title }}</div>
         <div class="mr-[20px]"></div>
         <div class="text-[10px] text-[#cccccc]">所有的编辑内容都会自动保存到云端</div>
       </div>

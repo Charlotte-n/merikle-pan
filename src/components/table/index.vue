@@ -8,12 +8,12 @@ const props = defineProps<{
   pageSize?: number
   extHeight: number
   add: boolean
-  rowSelection: any
+  rowSelection?: any
 }>()
 
 const emits = defineEmits<{
   (e: 'change', index: number): void
-  (e: 'rowClick', id: number): void
+  (e: 'rowClick', id: string): void
 }>()
 
 const viewportWidth = ref(window.innerHeight - 56 - 20 - 50 - props.extHeight)
@@ -44,11 +44,11 @@ watch(viewportWidth, (newVal, oldVal) => {
 onMounted(() => {
   console.log(props.data)
 })
-const handleClick = (record, index) => {
+const handleClick = (record: any, index: number) => {
   return {
     onClick: () => {
       if (record.category) {
-        emits('rowClick', 123)
+        emits('rowClick', record.id)
       }
     }
   }
