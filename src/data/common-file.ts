@@ -15,3 +15,14 @@ export const CommonFileColumnType = [
     key: 'edit'
   }
 ]
+export const CommonFileShareData = [
+  {
+    key: 0,
+    title: '可查看',
+    default: 'active'
+  },
+  {
+    key: 1,
+    title: '可编辑'
+  }
+]
