@@ -16,10 +16,26 @@ enum CATEGORY {
   EXCEL = 2,
   PPT = 3
 }
-const RowClick = (id: string) => {
-  console.log('123', '我获取的内容为')
+enum PATH {
+  COMMMON_WORD = '/commonWord/',
+  COMMON_EXCEL = '/commonExcel/',
+  COMMON_PPT = '/commonPPT/'
+}
+const RowClick = (id: string, category: string) => {
+  let path = ''
+  switch (Number(category)) {
+    case CATEGORY.WORD:
+      path = PATH.COMMMON_WORD + id
+      break
+    case CATEGORY.EXCEL:
+      path = PATH.COMMON_EXCEL + id
+      break
+    case CATEGORY.PPT:
+      path = PATH.COMMON_PPT + id
+      break
+  }
   const { href } = router.resolve({
-    path: '/commonWord/' + id
+    path: path
   })
   window.open(href, '_blank')
 }
@@ -41,7 +57,7 @@ const createWord = async (category: number) => {
     const res = await CreateFileApi(param.value)
     if (res.code === 0) {
       message.success('创建成功')
-      await getFileList()
+      const re = await getFileList()
     }
   } catch (e) {
     console.log(e, '创建文件的接口出错了')

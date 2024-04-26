@@ -95,8 +95,8 @@ const exportPdf = () => {
 
 //创建不同的quill文档编辑器
 const quills = ref({})
-const ytextInstance = ref<any>()
-const providerInstance = ref<any>()
+const ytextInstance = ref<any>({})
+const providerInstance = ref<any>({})
 // 在需要显示文档编辑器的地方，根据文档 ID 创建或获取对应的 Quill 实例
 function createQuillForDocument(documentId: string) {
   if (!(quills.value as any)[documentId]) {
@@ -105,7 +105,8 @@ function createQuillForDocument(documentId: string) {
     ;(quills.value as any)[documentId] = quill
     const ydoc = new Y.Doc()
     const provider = new WebsocketProvider('ws://localhost:1234', documentId, ydoc)
-    const ytext = ydoc.getText(documentId)
+    const ytext = ydoc.getText('quill')
+    console.log(ytext)
     const binding = new QuillBinding(ytext, quill, provider.awareness)
 
     // 将 Quill 编辑器和 Yjs 实例存储到 ref 中
@@ -128,46 +129,49 @@ onMounted(async () => {
   quill.setContents(delta)
   //提前渲染数据
   let timeId: any = null
-  function debounce(func: any, delay: number) {
-    return function () {
-      if (timeId) {
-        clearTimeout(timeId)
-      }
-      timeId = setTimeout(() => {
-        func()
-      }, delay)
-    }
-  }
-  ytextInstance.value.observe((event: any) => {
+  // function debounce(func: any, delay: number) {
+  //   return function () {
+  //     if (timeId) {
+  //       clearTimeout(timeId)
+  //     }
+  //     timeId = setTimeout(() => {
+  //       func()
+  //     }, delay)
+  //   }
+  // }
+  ytextInstance.value[route.params.id as any].observe((event: any) => {
     const delta = quill.getContents()
     useCommonStore.changeInnerHtmlContent(delta)
-    textArea.value = ytextInstance.value.toString()
-    debounce(() => {
-      providerInstance.value.ws?.send(
-        JSON.stringify({
-          event: 'events', // 注意加 event 要不然 service 的 subscriber 不生效,很重要
-          data: {
-            delta: quill.getContents(),
-            id: route.params.id
-          }
-        })
-      )
-    }, 1000)()
+    textArea.value = ytextInstance.value[route.params.id as any].toString()
+    // debounce(() => {
+    providerInstance.value[route.params.id as any].ws?.send(
+      JSON.stringify({
+        event: 'events', // 注意加 event 要不然 service 的 subscriber 不生效,很重要
+        data: {
+          delta: quill.getContents(),
+          id: route.params.id
+        }
+      })
+    )
+    // }, 1000)()
   })
   //检测text-change的变化获取delta
   quill.on('text-change', (delta: any, oldDelta: any) => {
     console.log(delta, oldDelta)
   })
-  providerInstance.value.ws!.addEventListener('open', function () {
+  providerInstance.value[route.params.id as any].ws!.addEventListener('open', function () {
     console.log('websocket打开了')
   })
 
-  providerInstance.value.ws?.addEventListener('close', function () {
+  providerInstance.value[route.params.id as any].ws?.addEventListener('close', function () {
     console.log('websocket关闭了')
   })
 
   textArea.addEventListener('input', () => {
-    ytextInstance.value.insert(textArea.value.length - 1, textArea.value.slice(-1))
+    ytextInstance.value[route.params.id as any].insert(
+      textArea.value.length - 1,
+      textArea.value.slice(-1)
+    )
   })
 })
 </script>

@@ -119,6 +119,11 @@ const router = createRouter({
       path: '/commonWord/:id',
       name: 'commonWord',
       component: () => import('@/views/ShareFile/c-pages/common-word/index.vue')
+    },
+    {
+      path: '/commonExcel/:id',
+      name: 'commonExcel',
+      component: () => import('@/views/ShareFile/c-pages/common-excel/index.vue')
     }
   ]
 })

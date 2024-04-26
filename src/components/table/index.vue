@@ -48,7 +48,7 @@ const handleClick = (record: any, index: number) => {
   return {
     onClick: () => {
       if (record.category) {
-        emits('rowClick', record.id)
+        emits('rowClick', record.id, record.category)
       }
     }
   }
