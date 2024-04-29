@@ -4,16 +4,28 @@ import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/Common
 import { getFileInfoApi } from '@/apis/file.ts'
 import { useRoute } from 'vue-router'
 import { GetFileContentApi } from '@/apis/commonFile.ts'
+import { CATEGORY } from '@/data/common-file.ts'
+import { exportJs } from '@/util/luckysheet/export.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
 
 const route = useRoute()
+const edit = ref(true)
+const userStore = useUserInfo()
+const userId = ref('')
+const fetchExcelData = async () => {
+  const res = await GetFileContentApi(route.params.id as string)
+  edit.value = res.data.edit
+  userId.value = res.data.userId
+}
 
 const init = () => {
   const options = {
     container: 'luckysheet',
     showinfobar: false,
     allowUpdate: true,
-    loadUrl: 'http://localhost:3000/commonExcel/fetchExcelData',
-    updateUrl: 'ws://localhost:2555?id=' + route.params.id
+    loadUrl: 'http://localhost:3000/commonExcel/fetchExcelData?id=' + route.params.id,
+    updateUrl: 'ws://localhost:2555?id=' + route.params.id,
+    allowEdit: userStore.userInfo._id === userId.value ? true : edit.value
   }
   luckysheet.create(options)
 }
@@ -23,8 +35,12 @@ const getFileContent = async () => {
   const res = await GetFileContentApi((route.params as any).id)
   name.value = res.data.title
 }
-
+//导出excel(下载excel)
+const exportExcel = () => {
+  exportJs(window.luckysheet.getAllSheets(), '下载')
+}
 onMounted(async () => {
+  await fetchExcelData()
   init()
   await getFileContent()
 })
@@ -33,7 +49,11 @@ onMounted(async () => {
 <template>
   <div class="h-[100vh]">
     <!--    头部-->
-    <CommonFileHeader :title="name" export-pdf=""></CommonFileHeader>
+    <CommonFileHeader
+      :title="name"
+      :export-excel="exportExcel"
+      :category="CATEGORY.EXCEL"
+    ></CommonFileHeader>
     <div
       id="luckysheet"
       style="

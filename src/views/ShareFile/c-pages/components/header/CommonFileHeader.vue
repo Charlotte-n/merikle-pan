@@ -11,7 +11,9 @@ const UserStore = useUserInfo()
 const avatar = ref('')
 const props = defineProps<{
   title: string
-  exportPdf: () => void
+  exportPdf?: () => void
+  exportExcel?: () => void
+  category: number
 }>()
 const router = useRouter()
 const route = useRoute()
@@ -99,6 +101,8 @@ onMounted(() => {
     @close="close"
     :title="name ? name : title"
     @exportPdf="exportPdf"
+    @exportExcel="exportExcel"
+    :category="category"
   ></ShareModal>
 </template>
 

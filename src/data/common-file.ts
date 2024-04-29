@@ -26,3 +26,8 @@ export const CommonFileShareData = [
     title: '可编辑'
   }
 ]
+
+export enum CATEGORY {
+  PDF = 1,
+  EXCEL = 2
+}

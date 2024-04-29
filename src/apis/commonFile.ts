@@ -65,6 +65,7 @@ export const GetFileContentApi = (id: string) => {
       content: string
       title: string
       edit: boolean
+      userId: string
     }>
   >({
     url: BASEURL.GET_FILE_CONTENT,

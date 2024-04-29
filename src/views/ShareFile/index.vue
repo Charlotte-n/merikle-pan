@@ -57,6 +57,7 @@ const createWord = async (category: number) => {
     const res = await CreateFileApi(param.value)
     if (res.code === 0) {
       message.success('创建成功')
+      visible.value = false
       const re = await getFileList()
     }
   } catch (e) {
@@ -102,9 +103,9 @@ onMounted(() => {
                   <img class="w-[30px] h-[30px]" alt="" src="@/assets/icon-image/word.png" />
                   <div class="mt-[5px] text-[10px]">文档</div>
                 </div>
-                <div class="mr-[30px] cursor-pointer">
+                <div class="mr-[30px] cursor-pointer" @click="createWord(CATEGORY.EXCEL)">
                   <img class="w-[30px] h-[30px]" alt="" src="@/assets/icon-image/excel.png" />
-                  <div class="mt-[5px] text-[10px]" @click="createWord(CATEGORY.EXCEL)">表格</div>
+                  <div class="mt-[5px] text-[10px]">表格</div>
                 </div>
                 <div>
                   <img

@@ -12,11 +12,15 @@ import { useRoute } from 'vue-router'
 import { useCommonShareFileStore } from '@/stores/commonShareFile.ts'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
+import { CATEGORY } from '@/data/common-file.ts'
+import { useUserInfo } from '@/stores/userInfo.ts'
 
 const useCommonStore = useCommonShareFileStore()
 const title = ref('')
 const content = ref('')
 const isEdit = ref(true)
+const userId = ref('')
+const userStore = useUserInfo()
 const route = useRoute()
 const toolbarOptions = [
   ['bold', 'italic', 'underline', 'strike'], // 字体
@@ -52,6 +56,7 @@ const getFileContent = async () => {
   title.value = res.data.title
   content.value = res.data.content
   isEdit.value = res.data.edit
+  userId.value = res.data.userId
 }
 //#endregion
 
@@ -123,7 +128,7 @@ onMounted(async () => {
   // 从本地存储获取数据库内容，如果不存在则从数据库获取并设置到 Quill 编辑器中
   let delta
   await getFileContent()
-  quill.enable(isEdit.value)
+  quill.enable(userId.value === userStore.userInfo._id ? true : isEdit.value)
   await quill.setText('')
   delta = content.value
   quill.setContents(delta)
@@ -178,7 +183,11 @@ onMounted(async () => {
 
 <template>
   <header>
-    <CommonFileHeader :title="title" :exportPdf="exportPdf"></CommonFileHeader>
+    <CommonFileHeader
+      :title="title"
+      :exportPdf="exportPdf"
+      :category="CATEGORY.PDF"
+    ></CommonFileHeader>
   </header>
   <!--  引入文件编辑器-->
   <div

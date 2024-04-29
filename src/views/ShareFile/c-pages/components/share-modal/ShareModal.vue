@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CommonFileShareData } from '@/data/common-file.ts'
+import { CATEGORY, CommonFileShareData } from '@/data/common-file.ts'
 import useClipboard from 'vue-clipboard3'
 import { message } from 'ant-design-vue'
 import { useRoute } from 'vue-router'
@@ -11,10 +11,12 @@ import { updateFilePrivial } from '@/apis/commonFile.ts'
 const props = defineProps<{
   open: boolean
   title: string
+  category: number
 }>()
 const emit = defineEmits<{
   (e: 'close'): void
   (e: 'exportPdf'): void
+  (e: 'exportExcel'): void
 }>()
 const route = useRoute()
 const { toClipboard } = useClipboard()
@@ -32,6 +34,14 @@ const doc = new jsPDF()
 const exportPdf = async () => {
   closeModal()
   emit('exportPdf')
+  message.success('导出成功')
+}
+//#endregion
+
+//#region 导出excel
+const exportExcel = () => {
+  closeModal()
+  emit('exportExcel')
   message.success('导出成功')
 }
 //#endregion
@@ -93,11 +103,18 @@ const closeModal = () => {
           <div class="mt-[10px] text-[13px]">复制链接</div>
         </div>
         <!--        转化为PDF-->
-        <div class="cursor-pointer" @click="exportPdf">
+        <div class="cursor-pointer" @click="exportPdf" v-if="category === CATEGORY.PDF">
           <div class="bg-[#F3F5F7] pl-[10px] pr-[10px] pt-[10px] pb-[10px]">
             <img src="@/assets/icon-image/pdf.png" class="w-[30px]" alt="" />
           </div>
           <div class="pt-[10px] text-[13px]">转化为pdf</div>
+        </div>
+        <!--        转化为EXCEL-->
+        <div class="cursor-pointer" @click="exportExcel" v-else-if="category === CATEGORY.EXCEL">
+          <div class="bg-[#F3F5F7] pl-[15px] pr-[10px] pt-[10px] pb-[10px] w-[55px] h-[50px]">
+            <img src="@/assets/icon-image/excel.png" class="w-[25px]" alt="" />
+          </div>
+          <div class="pt-[10px] text-[13px]">转化为excel</div>
         </div>
       </div>
     </div>
