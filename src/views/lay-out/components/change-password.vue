@@ -8,6 +8,7 @@ const storage = useStorage()
 const UserInfo = JSON.parse(storage.getItem('userInfoExtra'))
 const props = defineProps<{
   open: boolean
+  userId?: string
 }>()
 const emits = defineEmits(['cancel'])
 const formRef = ref()
@@ -41,7 +42,8 @@ const rules: Record<string, Rule[]> = {
 //修改密码
 const ResetPassword = async () => {
   const res = await ResetPasswordApi({
-    email: UserInfo.email,
+    //为了兼顾admin修改用户的密码
+    email: props.userId ? props.userId : UserInfo.email,
     password: formData.value.password,
     twicePassword: formData.value.confirmPassword
   })
@@ -51,7 +53,7 @@ const ResetPassword = async () => {
   }
 }
 onBeforeUnmount(() => {
-  if (!props.open) {
+  if (!props.open && formRef.value) {
     formRef.value.resetField()
   }
 })
