@@ -24,7 +24,7 @@ const init = () => {
     showinfobar: false,
     allowUpdate: true,
     loadUrl: 'http://localhost:3000/commonExcel/fetchExcelData?id=' + route.params.id,
-    updateUrl: 'ws://localhost:2555?id=' + route.params.id,
+    updateUrl: 'ws://localhost:2575?id=' + route.params.id,
     allowEdit: userStore.userInfo._id === userId.value ? true : edit.value
   }
   luckysheet.create(options)

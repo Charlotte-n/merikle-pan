@@ -81,11 +81,11 @@ export const menu = [
       {
         name: '用户列表',
         path: '/settings/userList'
-      },
-      {
-        name: '文件列表',
-        path: '/settings/fileList'
       }
+      // {
+      //   name: '文件列表',
+      //   path: '/settings/fileList'
+      // }
     ]
   },
   {

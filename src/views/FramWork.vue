@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Header from '@/views/lay-out/header.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { nextTick, onMounted, provide, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
 import { menu } from '@/data/home.ts'
-import { getUserSpaceApi } from '@/apis/user.ts'
+import { GetUserInfo, getUserSpaceApi } from '@/apis/user.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
 const router = useRouter()
 const route = useRoute()
@@ -60,7 +60,27 @@ const getSpace = async () => {
   const res = await getUserSpaceApi((userStore.userInfo as any)._id)
   userStore.changeUserSpace(res.data)
 }
+const admin = ref()
+const getUserInfo = async () => {
+  const res = await GetUserInfo(userStore.userInfo._id)
+  admin.value = res.isAdmin
+}
+//获取你的menu
+const getMenu = computed(() => {
+  const res: any = []
+  menu.forEach((item) => {
+    if (admin.value === 0) {
+      res.push(item)
+    } else {
+      if (item.allowShow) {
+        res.push(item)
+      }
+    }
+  })
+  return res
+})
 onMounted(() => {
+  getUserInfo()
   getSpace()
 })
 provide('reload', UploadCallBackHandler)
@@ -74,7 +94,7 @@ provide('reload', UploadCallBackHandler)
     <!--    一级导航-->
     <div class="left-menu-first pt-[10px] shadow-xl flex-[0.8]">
       <div
-        v-for="item in menu"
+        v-for="item in getMenu"
         :key="item.name"
         class="h-[80px] flex flex-col justify-center items-center text-[#636D7E] bg-white cursor-pointer hover:bg-[#F3F3F3]"
         @click="jump(item)"

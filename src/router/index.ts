@@ -21,7 +21,12 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: LoginRegister
+      component: LoginRegister,
+      meta: {
+        allowShow: true,
+        needLogin: true,
+        menuCode: 'main'
+      }
     },
     {
       path: '/',
@@ -84,16 +89,6 @@ const router = createRouter({
           }
         },
         {
-          path: '/settings/fileList',
-          name: '用户文件',
-          component: fileList,
-          meta: {
-            allowShow: false,
-            needLogin: true,
-            menuCode: 'setting'
-          }
-        },
-        {
           path: '/commonFile/our',
           name: '多人协作',
           component: CommonFile,
@@ -138,7 +133,6 @@ router.beforeEach((to, from, next) => {
     //查看是否有token
     if (token) {
       try {
-        console.log(123)
         next()
       } catch (e) {
         //token过期了，返回登录页面

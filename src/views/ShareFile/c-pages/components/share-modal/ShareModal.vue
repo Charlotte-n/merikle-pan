@@ -72,25 +72,25 @@ const closeModal = () => {
 <template>
   <a-modal :open="open" :footer="false" :width="350" @close="closeModal" @cancel="closeModal">
     <header class="pl-[15px] text-[18px]">分享</header>
-    <div class="mt-[10px] pl-[15px] text-[10px] pr-[15px] pb-[10px]">
-      <div>谁可以查看/编辑文件</div>
-      <div>
-        <div
-          v-for="item in CommonFileShareData"
-          :key="item.key"
-          @click="changeActive"
-          :class="[
-            'text-[13px] pt-[10px] pl-[15px] cursor-pointer list',
-            item.default ? item.default : ''
-          ]"
-        >
-          {{ item.title }}
-        </div>
-      </div>
-    </div>
-    <section class="flex-row pr-[20px] text-end">
-      <a-button type="primary" @click="changePrivial">确定</a-button>
-    </section>
+    <!--    <div class="mt-[10px] pl-[15px] text-[10px] pr-[15px] pb-[10px]">-->
+    <!--      <div>谁可以查看/编辑文件</div>-->
+    <!--      <div>-->
+    <!--        <div-->
+    <!--          v-for="item in CommonFileShareData"-->
+    <!--          :key="item.key"-->
+    <!--          @click="changeActive"-->
+    <!--          :class="[-->
+    <!--            'text-[13px] pt-[10px] pl-[15px] cursor-pointer list',-->
+    <!--            item.default ? item.default : ''-->
+    <!--          ]"-->
+    <!--        >-->
+    <!--          {{ item.title }}-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+    <!--    <section class="flex-row pr-[20px] text-end">-->
+    <!--      <a-button type="primary" @click="changePrivial">确定</a-button>-->
+    <!--    </section>-->
     <div class="pl-[15px] text-[#5C5C5C]">
       <div>分享至</div>
       <!--      内容-->
