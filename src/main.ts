@@ -18,6 +18,8 @@ import Hover from '@/components/hover/index.vue'
 import pinia from '@/stores/index.ts'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import Navigation from '@/components/navigation/index.vue'
+
+import i18n from '@/lang'
 const app = createApp(App)
 
 pinia.use(piniaPluginPersistedstate)
@@ -32,6 +34,7 @@ app.config.globalProperties.globalInfo = {
 
 app.use(pinia)
 app.use(Antd)
+app.use(i18n)
 app.use(router)
 
 app.mount('#app')

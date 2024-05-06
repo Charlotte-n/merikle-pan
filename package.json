@@ -39,6 +39,7 @@
     "spark-md5": "^3.0.2",
     "vue": "^3.4.15",
     "vue-clipboard3": "^2.0.0",
+    "vue-i18n": "9",
     "vue-pdf-embed": "^2.0.3",
     "vue-router": "^4.2.5",
     "xlsx": "^0.18.5",

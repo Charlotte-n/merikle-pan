@@ -62,10 +62,10 @@ onBeforeUnmount(() => {
 <template>
   <Modal
     :open="props.open"
-    title="修改密码"
+    :title="$t('user.password')"
     show-cancel
     :ok-btn="{
-      text: '确定',
+      text: $t('common.confirm'),
       type: 'primary'
     }"
     @close="cancel"
@@ -78,10 +78,10 @@ onBeforeUnmount(() => {
       :model="formData"
       :rules="rules"
     >
-      <a-form-item label="新密码" name="password">
+      <a-form-item :label="$t('user.new.password')" name="password">
         <a-input-password size="large" v-model:value="formData.password"></a-input-password>
       </a-form-item>
-      <a-form-item label="确认密码" name="confirmPassword">
+      <a-form-item :label="$t('user.confirm.password')" name="confirmPassword">
         <a-input-password size="large" v-model:value="formData.confirmPassword"></a-input-password>
       </a-form-item>
     </a-form>

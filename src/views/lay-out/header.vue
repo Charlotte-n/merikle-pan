@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Avatar from '@/components/avatar/index.vue'
-import { UserOutlined } from '@ant-design/icons-vue'
+import { UserOutlined, DownOutlined } from '@ant-design/icons-vue'
 import AvatarUpload from '@/views/lay-out/components/avatar-upload.vue'
 import { computed, ref, defineExpose, inject } from 'vue'
 import ChangePassword from '@/views/lay-out/components/change-password.vue'
@@ -8,6 +8,10 @@ import LoginOut from '@/views/lay-out/components/login-out.vue'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import UploadTask from '@/views/lay-out/components/uploadTask.vue'
 import { useCommonStore } from '@/stores/common.ts'
+import { LOCALE_OPTIONS } from '@/lang'
+import { useLang } from '@/hooks/lang.ts'
+import { useStorage } from '@/hooks/useStorage.ts'
+import { useI18n } from 'vue-i18n'
 
 const CommonStore = useCommonStore()
 const open = ref(false)
@@ -45,6 +49,11 @@ const addFile = async (value: { file: File; filePid: string }) => {
   }
 }
 
+//国际化
+const locales = [...LOCALE_OPTIONS]
+const { locale } = useI18n()
+const { changeLang, currentLang } = useLang(locale)
+
 defineExpose({ addFile })
 </script>
 
@@ -59,6 +68,19 @@ defineExpose({ addFile })
     </div>
     <!--    右侧-->
     <div class="flex items-center">
+      <!--      国际化-->
+      <a-dropdown class="mr-[10px]">
+        <template #overlay>
+          <a-menu :selectedKeys="[currentLang]">
+            <a-menu-item v-for="(item, index) in locales" :key="index" @click="changeLang(index)">{{
+              item.label
+            }}</a-menu-item>
+          </a-menu>
+        </template>
+        <a-button shape="circle" class="flex items-center">
+          <img src="@/assets/icon-image/wenzi.png" alt="" class="w-[30px] h-[30px]" />
+        </a-button>
+      </a-dropdown>
       <!--      弹窗-->
       <a-popover
         @click="CommonStore.changePopoverShow"
@@ -95,7 +117,7 @@ defineExpose({ addFile })
                 @click.prevent
                 @click="changePannal(changeUserInfo.avatar)"
               >
-                修改头像
+                {{ $t('user.avatar') }}
               </a>
             </a-menu-item>
             <a-menu-item key="1">
@@ -105,10 +127,12 @@ defineExpose({ addFile })
                 @click.prevent
                 @click="changePannal(changeUserInfo.password)"
               >
-                修改密码
+                {{ $t('user.password') }}
               </a>
             </a-menu-item>
-            <a-menu-item key="2" @click="changePannal(changeUserInfo.logOut)">退出</a-menu-item>
+            <a-menu-item key="2" @click="changePannal(changeUserInfo.logOut)">
+              {{ $t('user.login.out') }}
+            </a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>

@@ -34,8 +34,12 @@ const handleOk = () => {
     </div>
     <template v-if="btn?.text || showCancel">
       <div class="flex justify-end mt-[20px] pl-[15px] pr-[10px]">
-        <a-button v-if="showCancel" :type="btn?.type || 'default'" class="mr-[10px]" @click="close"
-          >取消</a-button
+        <a-button
+          v-if="showCancel"
+          :type="btn?.type || 'default'"
+          class="mr-[10px]"
+          @click="close"
+          >{{ $t('common.cancel') }}</a-button
         >
         <a-button
           :type="btn?.type || 'primary'"

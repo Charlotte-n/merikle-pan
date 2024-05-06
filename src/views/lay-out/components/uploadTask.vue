@@ -218,12 +218,12 @@ defineExpose({ addFile: addFile })
   <header
     class="popover-header pl-[10px] pr-[10px] pt-[10px] pb-[10px] border-b-[1px] border-solid border-[#DDDDDD] border-t-0 border-l-0 border-r-0"
   >
-    <span>上传任务</span>
-    <span class="text-[#AFAFAF] ml-[5px]">(仅展示本次上传任务)</span>
+    <span>{{ $t('upload.task.title') }}</span>
+    <span class="text-[#AFAFAF] ml-[5px]">({{ $t('upload.task.subtitle') }})</span>
   </header>
   <main class="min-h-[450px] w-[800px]">
     <div class="text-center pt-[20px]" v-if="fileList.length === 0">
-      <span class="text-center text-[#666666]">暂无上传任务</span>
+      <span class="text-center text-[#666666]">{{ $t('upload.task.none') }}</span>
     </div>
     <div v-else class="">
       <ul>

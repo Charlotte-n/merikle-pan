@@ -70,22 +70,24 @@ defineExpose({ a: 123 })
 <template>
   <Modal
     :open="props.open"
-    title="修改头像"
+    :title="$t('user.avatar')"
     show-cancel
     @close="cancel"
     :btn-other-show="false"
     :ok-btn="{
-      text: '确定'
+      text: $t('common.confirm')
     }"
   >
     <div class="pl-[20px] pt-[20px] pb-[20px]">
       <div>
-        <span class="mr-[20px] text-[#97999B]">昵称</span>
+        <span class="mr-[20px] text-[#97999B]">{{ $t('user.nickname') }}</span>
         <!--       死页面-->
         <span>Merikle</span>
       </div>
       <div class="flex items-center mt-[20px]">
-        <span class="mr-[10px] text-[#97999B] inline-block w-[50px]">头像</span>
+        <span class="mr-[10px] text-[#97999B] inline-block w-[50px]">{{
+          $t('user.avatar.value')
+        }}</span>
         <div>
           <a-upload
             v-model:file-list="fileList"
@@ -109,7 +111,7 @@ defineExpose({ a: 123 })
         </div>
 
         <div class="ml-[20px]">
-          <a-button type="primary" @click="handleUpload"> 修改头像 </a-button>
+          <a-button type="primary" @click="handleUpload"> {{ $t('user.avatar') }} </a-button>
         </div>
       </div>
     </div>
