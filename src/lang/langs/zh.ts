@@ -1,3 +1,8 @@
+import LayoutHeaderCh from '@/views/main/lang/ch.ts'
+import ShareCh from '@/views/share/lang/ch.ts'
+import CycleCh from '@/views/cycle/lang/ch.ts'
+import CommonFileCh from '@/views/ShareFile/lang/ch.ts'
+
 export default {
   'upload.task.title': '上传任务',
   'upload.task.subtitle': '仅展示本次上传任务',
@@ -10,5 +15,38 @@ export default {
   'user.nickname': '昵称',
   'user.avatar.value': '头像',
   'user.new.password': '新密码',
-  'user.confirm.password': '确认密码'
+  'user.confirm.password': '确认密码',
+  'common.tip': '提示',
+  'common.tips': '你确定要退出吗',
+  'navbar.index': '首页',
+  'navbar.share': '分享',
+  'navbar.cycle': '回收站',
+  'navbar.common': '多人协作',
+  'navbar.setting': '设置',
+  'navbar.index.all': '全部',
+  'navbar.index.video': '视频',
+  'navbar.index.audio': '音频',
+  'navbar.index.img': '图片',
+  'navbar.index.doc': '文档',
+  'navbar.index.other': '其他',
+  'navbar.share.menu': '分享目录',
+  'navbar.cycle.menu': '删除的文件',
+  'navbar.cycle.tips': '回收站为你保存10天内删除的文件',
+  'navbar.common.doc': '我的文档',
+  'table.title.fileName': '文件名',
+  'table.title.deleteTime': '删除时间',
+  'table.title.size': '大小',
+  'table.hover.share': '分享',
+  'table.hover.delete': '删除',
+  'table.hover.rename': '重命名',
+  'table.hover.move': '移动',
+  'table.hover.download': '下载',
+  'navigator.all': '全部文件',
+  'navigator.prev': '上一级目录',
+  'common.space.use': '空间的使用',
+
+  ...LayoutHeaderCh,
+  ...ShareCh,
+  ...CycleCh,
+  ...CommonFileCh
 }

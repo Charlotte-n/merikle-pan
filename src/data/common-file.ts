@@ -1,20 +1,25 @@
-export const CommonFileColumnType = [
+import { computed } from 'vue'
+import i18n from '@/lang'
+
+const $t = i18n.global.t
+
+export const CommonFileColumnType = computed(() => [
   {
-    title: '名称',
+    title: $t('commonFile.table.fileName'),
     dataIndex: 'name',
     key: 'name'
   },
   {
-    title: '所有者',
+    title: $t('commonFile.table.owner'),
     dataIndex: 'owner',
     key: 'owner'
   },
   {
-    title: '最近编辑',
+    title: $t('commonFile.table.edit'),
     dataIndex: 'edit',
     key: 'edit'
   }
-]
+])
 export const CommonFileShareData = [
   {
     key: 0,

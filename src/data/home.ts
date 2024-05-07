@@ -1,74 +1,75 @@
-import { ref } from 'vue'
-
-export const menu = [
+import { computed, ref } from 'vue'
+import i18n from '@/lang'
+const $t = i18n.global.t
+export const menu = computed(() => [
   {
     path: '/main/all',
-    name: '首页',
+    name: $t('navbar.index'),
     menuCode: 'main',
     allowShow: true,
     icon: 'cloude',
     children: [
       {
         icon: 'all',
-        name: '全部',
+        name: $t('navbar.index.all'),
         path: '/main/all'
       },
       {
         icon: 'video',
-        name: '视频',
+        name: $t('navbar.index.video'),
         path: '/main/video'
       },
       {
         icon: 'music',
-        name: '音频',
+        name: $t('navbar.index.audio'),
         path: '/main/music'
       },
       {
         icon: 'image',
-        name: '图片',
+        name: $t('navbar.index.img'),
         path: '/main/image'
       },
       {
         icon: 'doc',
-        name: '文档',
+        name: $t('navbar.index.doc'),
         path: '/main/doc'
       },
       {
         icon: 'more',
-        name: '其他',
+        name: $t('navbar.index.other'),
         path: '/main/more'
       }
     ]
   },
   {
-    name: '分享',
+    name: $t('navbar.share'),
     menuCode: 'share',
     allowShow: true,
     icon: 'share',
     path: '/myShare',
     children: [
       {
-        name: '分享目录',
+        name: $t('navbar.share.menu'),
         path: '/myShare'
       }
     ]
   },
   {
-    name: '回收站',
+    name: $t('navbar.cycle'),
     menuCode: 'cycle',
     allowShow: true,
     icon: 'del',
     path: '/cycle',
-    tips: '回收站为你保存10天内删除的文件',
+    tips: $t('navbar.cycle.tips'),
     children: [
       {
-        name: '删除的文件',
+        name: $t('navbar.cycle.menu'),
         path: '/cycle'
       }
     ]
   },
   {
-    name: '设置',
+    name: $t('navbar.setting'),
     menuCode: 'setting',
     allowShow: false,
     icon: 'settings',
@@ -89,19 +90,19 @@ export const menu = [
     ]
   },
   {
-    name: '多人协作',
+    name: $t('navbar.common'),
     menuCode: 'cooperation',
     allowShow: true,
     icon: 'doc',
     path: '/commonFile/our',
     children: [
       {
-        name: '我的文档',
+        name: $t('navbar.common.doc'),
         path: '/commonFile/our'
       }
     ]
   }
-]
+])
 
 export interface HoverSingleData {
   icon: string
@@ -120,71 +121,54 @@ export interface DataItem {
   children?: DataItem[]
 }
 
-export const HomeColumns = [
+export const HomeColumns = computed(() => [
   {
-    title: '文件名',
+    title: $t('table.title.fileName'),
     dataIndex: 'name',
     key: 'name'
   },
   {
-    title: '删除时间',
+    title: $t('table.title.deleteTime'),
     dataIndex: 'time',
     key: 'time',
     width: '15%'
   },
   {
-    title: '大小',
+    title: $t('table.title.size'),
     dataIndex: 'size',
     width: '15%',
     key: 'size'
   }
-]
-
-export const HomeData = ref<DataItem[]>([
-  {
-    key: 1,
-    name: 'John Brown sr.',
-    time: 60,
-    size: 'New York No. 1 Lake Park',
-    showEdit: false
-  },
-  {
-    key: 2,
-    name: 'Joe Black',
-    time: 32,
-    size: 'Sidney No. 1 Lake Park',
-    showEdit: false
-  }
 ])
-export const HomeHoverData = ref([
+export const HomeHoverData = computed(() => [
   {
     key: 0,
     icon: 'share1',
-    text: '分享',
+    text: $t('table.hover.share'),
     show: true
   },
   {
     key: 1,
     icon: 'del',
-    text: '删除',
+    text: $t('table.hover.delete'),
     show: true
   },
   {
     key: 2,
     icon: 'edit',
-    text: '重命名',
+    text: $t('table.hover.rename'),
     show: true
   },
   {
     key: 4,
     icon: 'move',
-    text: '移动',
+    text: $t('table.hover.move'),
     show: true
   },
   {
     key: 5,
     icon: 'download',
-    text: '下载',
+    text: $t('table.hover.download'),
     show: false
   }
 ])

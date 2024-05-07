@@ -123,13 +123,13 @@ onMounted(() => {
         <template #icon>
           <span class="iconfont icon-revert mr-[5px]"></span>
         </template>
-        还原
+        {{ $t('cycle.reduction') }}
       </a-button>
       <a-button danger type="primary" :disabled="ids.length === 0" @click="deleteMany">
         <template #icon>
           <span class="iconfont icon-del mr-[5px] text-[13px]"></span>
         </template>
-        批量删除
+        {{ $t('cycle.batch.deletion') }}
       </a-button>
     </div>
     <MyTable

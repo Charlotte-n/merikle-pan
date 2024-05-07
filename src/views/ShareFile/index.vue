@@ -91,7 +91,7 @@ onMounted(() => {
           <template #icon>
             <PlusOutlined style="font-size: 18px" />
           </template>
-          新建
+          {{ $t('commonFile.create') }}
         </a-button>
         <a-card class="mt-[4px] absolute" style="z-index: 20" v-if="visible">
           <div class="text-[15px]" style="font-weight: 600">新建</div>
@@ -125,7 +125,7 @@ onMounted(() => {
         <template #icon>
           <ImportOutlined style="font-size: 18px" />
         </template>
-        导入
+        {{ $t('commonFile.import') }}
       </a-button>
     </header>
     <!--    内容-->

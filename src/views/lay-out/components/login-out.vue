@@ -4,8 +4,10 @@ import { createVNode, onMounted } from 'vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 import { useUserInfo } from '@/stores/userInfo.ts'
+import { useI18n } from 'vue-i18n'
 const emits = defineEmits(['cancel'])
 const UserStore = useUserInfo()
+const { t } = useI18n()
 const cancel = () => {
   emits('cancel')
 }
@@ -20,12 +22,12 @@ const ok = () => {
 
 onMounted(() => {
   Modal.confirm({
-    title: '提示',
+    title: t('common.tip'),
     icon: createVNode(ExclamationCircleOutlined),
-    content: '确定要退出吗',
-    okText: '确定',
+    content: t('common.tips'),
+    okText: t('common.confirm'),
     okType: 'danger',
-    cancelText: '取消',
+    cancelText: t('common.cancel'),
     onOk() {
       cancel()
       ok()

@@ -17,7 +17,7 @@ const currentMenu = ref()
 const currentPath = ref()
 //设置导航栏的高亮
 const setMenu = (menuCode: string, path: string) => {
-  currentMenu.value = menu.find((item) => item.menuCode === menuCode)
+  currentMenu.value = menu.value.find((item) => item.menuCode === menuCode)
   currentPath.value = path
 }
 watch(
@@ -68,7 +68,7 @@ const getUserInfo = async () => {
 //获取你的menu
 const getMenu = computed(() => {
   const res: any = []
-  menu.forEach((item) => {
+  menu.value.forEach((item) => {
     if (admin.value === 0) {
       res.push(item)
     } else {
@@ -147,7 +147,7 @@ provide('reload', UploadCallBackHandler)
       </div>
 
       <div class="pl-[10px] mb-[20px] text-[10px]">
-        <div class="">空间的使用</div>
+        <div class="">{{ $t('common.space.use') }}</div>
         <div>
           <a-progress
             :percent="

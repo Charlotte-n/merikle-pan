@@ -1,44 +1,32 @@
-export const shareColume = [
+import { computed } from 'vue'
+import i18n from '@/lang'
+
+const $t = i18n.global.t
+export const shareColume = computed(() => [
   {
-    title: '文件名',
+    title: $t('share.table.title.fileName'),
     dataIndex: 'name',
     key: 'name'
   },
   {
-    title: '分享时间',
+    title: $t('share.table.title.time'),
     dataIndex: 'time',
     key: 'time',
     width: '12%'
   },
   {
-    title: '失效时间',
+    title: $t('share.table.title.expiration'),
     dataIndex: 'unValid',
     width: '20%',
     key: 'unValid'
   },
   {
-    title: '浏览次数',
+    title: $t('share.table.title.scan'),
     dataIndex: 'number',
     width: '20%',
     key: 'number'
   }
-]
-export const ShareData = [
-  {
-    key: 1,
-    name: 'John Brown sr.',
-    time: 60,
-    unValid: 'New York No. 1 Lake Park',
-    number: '123'
-  },
-  {
-    key: 2,
-    name: 'Joe Black',
-    time: 32,
-    unValid: 'Sidney No. 1 Lake Park',
-    number: '123'
-  }
-]
+])
 export const ShareHoverData = [
   {
     key: 0,

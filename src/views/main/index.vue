@@ -463,7 +463,7 @@ defineExpose({ getAllFile })
           <template #icon>
             <upload-outlined />
           </template>
-          上传
+          {{ $t('layout-header-upload') }}
         </a-button>
       </a-upload>
       <a-button
@@ -474,7 +474,7 @@ defineExpose({ getAllFile })
         <template #icon>
           <FolderOpenOutlined />
         </template>
-        新建文件夹
+        {{ $t('layout-header-add-file') }}
       </a-button>
       <a-button
         type="primary"
@@ -485,7 +485,7 @@ defineExpose({ getAllFile })
         <template #icon>
           <span class="iconfont icon-del mr-[10px] text-[15px]"></span>
         </template>
-        批量删除
+        {{ $t('layout-header-batch-deletion') }}
       </a-button>
       <a-button
         class="bg-amber-500 text-white border-[white] hover:opacity-60 h-[35px] move"
@@ -495,13 +495,13 @@ defineExpose({ getAllFile })
         <template #icon>
           <span class="iconfont icon-move text-[15px] mr-[10px]"></span>
         </template>
-        批量移动
+        {{ $t('layout-header-batch-move') }}
       </a-button>
       <!--      搜索-->
       <a-input-search
         @keyup.enter="handleSearch"
         class="xl:w-[25%]"
-        placeholder="输入文件名搜索"
+        :placeholder="$t('layout-header-search')"
         allowClear
         @search="handleSearch"
         v-model:value="title"

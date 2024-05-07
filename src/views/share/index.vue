@@ -92,11 +92,11 @@ onMounted(() => {
         <template #icon>
           <StopOutlined />
         </template>
-        取消分享
+        {{ $t('share.cancel') }}
       </a-button>
     </div>
     <div class="mt-[10px] mb-[15px] text-[#636D7E] text-[13px]" style="font-weight: 800">
-      全部文件
+      {{ $t('navigator.all') }}
     </div>
     <MyTable
       :data="shareList"

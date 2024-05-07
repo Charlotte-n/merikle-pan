@@ -133,9 +133,11 @@ defineExpose({
 <template>
   <div class="flex text-[10px] text-[#05A1F7]">
     <div class="mr-[5px] cursor-pointer" v-if="FolderList.length > 0" @click="backParent">
-      上级目录 >
+      {{ $t('navigator.prev') }} >
     </div>
-    <div class="mr-[5px] cursor-pointer" v-else @click="setCurrentFolder(-1)">全部文件 &gt;</div>
+    <div class="mr-[5px] cursor-pointer" v-else @click="setCurrentFolder(-1)">
+      {{ $t('navigator.all') }} &gt;
+    </div>
     <!--    显示其他的文件夹-->
     <div v-for="(item, index) in resultNavigation" :key="index">
       <span
