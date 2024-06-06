@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import MyModel from '@/components/ant-modal/ant-modal.vue'
-import { nextTick, onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import Icon from '@/components/icon/index.vue'
 import Navigation from '@/components/navigation/index.vue'
-import {
-  getAllDirectoryApi,
-  getNavigationApi,
-  getSubCategoryApi,
-  MoveFileOrDirectoryApi
-} from '@/apis/directory.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { getSubCategoryApi, MoveFileOrDirectoryApi } from '@/apis/directory.ts'
 import { message } from 'ant-design-vue'
 
 const props = defineProps<{
@@ -22,7 +16,7 @@ const emits = defineEmits(['close', 'moveFileOrDirectory', 'getAllFile', 'clearS
 const directory = ref<any>(props.data)
 //选择目录
 const navigateRef = ref()
-const selectFolder = (data: { filename: string; fileId: string }, item: any) => {
+const selectFolder = (data: { filename: string; fileId: string }) => {
   navigateRef.value.openFolder(data)
 }
 //获取目录
@@ -71,7 +65,8 @@ const moveFileOrDirectory = (folderId: string) => {
       title="移动到"
       show-cancel
       :ok-btn="{
-        text: '移动到此'
+        text: '移动到此',
+        type: 'primary'
       }"
       @close="
         () => {

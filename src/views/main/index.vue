@@ -300,17 +300,6 @@ const openMove = ref(false)
 const closeMove = () => {
   openMove.value = false
 }
-//获取文件的信息,查询出id来
-// const getFileInfo = computed(() => {
-//   return (
-//     HomeData.value
-//       .filter((item: any) => {
-//         return item._id === ids.value[0]
-//       })
-//       .map((am: any) => am.filePid) as string
-//   )[0]
-// })
-
 const directoryList = ref([] as GetAllDirectoryData)
 //获取文件夹的信息，打开弹窗
 const getAllDirectory = async (type: string) => {
@@ -422,7 +411,6 @@ const download = (fileInfo: any) => {
   // HomeHoverData.value[5].show = !fileInfo.folder_type
   window.location.href = imageUrlBase + fileInfo.fileCover
 }
-
 //endregion
 
 watch(

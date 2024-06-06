@@ -14,7 +14,9 @@ const props = defineProps<{
   exportPdf?: () => void
   exportExcel?: () => void
   category: number
+  quill: any
 }>()
+const emits = defineEmits(['saveFile'])
 const router = useRouter()
 const route = useRoute()
 const isChange = ref(false)
@@ -50,10 +52,14 @@ const openModal = () => {
 const close = () => {
   open.value = false
 }
+//保存
+const saveFile = () => {
+  emits('saveFile', JSON.stringify(props.quill.getDetail()))
+}
 
 //endregion
 onMounted(() => {
-  avatar.value = getImage(UserStore.userInfo.avatar)
+  avatar.value = getImage((UserStore.userInfo as { avatar: string; _id: string }).avatar)
 })
 </script>
 
@@ -89,6 +95,7 @@ onMounted(() => {
           alt=""
         />
         <a-button type="primary" class="mr-[10px]" @click="openModal">分享</a-button>
+        <a-button type="primary" @click="saveFile">保存</a-button>
         <div class="w-[1px] h-[10px] bg-[#cccccc] ml-[10px] mr-[10px]"></div>
         <div>
           <img :src="avatar" alt="用户头像" class="w-[50px] h-[50px]" style="border-radius: 10px" />

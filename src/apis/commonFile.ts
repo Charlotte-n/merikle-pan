@@ -8,7 +8,8 @@ enum BASEURL {
   UPDATE_FILE_CONTENT = '/commonFile/updateFileContent',
   GET_FILE_CONTENT = '/commonFile/getFileContent',
   UPDATE_FILE_NAME = '/commonFile/changeFileName',
-  UPDATE_FILE_PRIVIAL = '/commonFile/updateFilePrivial'
+  UPDATE_FILE_PRIVIAL = '/commonFile/updateFilePrivial',
+  GET_FILE_INFO = '/commonFile/getFileInfo'
 }
 
 /**
@@ -44,12 +45,12 @@ export const GetFileListApi = (userId: string) => {
  * @param data
  * @constructor
  */
-export const UpdateFileContentApi = (data: { id: string; content: string }) => {
-  const { id, content } = data
+export const UpdateFileContentApi = (data: { fileId: string; content: string }) => {
+  const { fileId, content } = data
   return hyRequest.post<CommonResponseType<any>>({
     url: BASEURL.UPDATE_FILE_CONTENT,
     data: {
-      id,
+      id: fileId,
       content
     }
   })
@@ -63,12 +64,29 @@ export const GetFileContentApi = (id: string) => {
   return hyRequest.get<
     CommonResponseType<{
       content: string
+    }>
+  >({
+    url: BASEURL.GET_FILE_CONTENT,
+    params: {
+      id
+    }
+  })
+}
+
+/**
+ * 获取文件信息
+ * @param id
+ * @returns
+ */
+export const GetFileInfoApi = (id: string) => {
+  return hyRequest.get<
+    CommonResponseType<{
       title: string
       edit: boolean
       userId: string
     }>
   >({
-    url: BASEURL.GET_FILE_CONTENT,
+    url: BASEURL.GET_FILE_INFO,
     params: {
       id
     }

@@ -87,17 +87,14 @@ const doCallBack = () => {
   useFileStore().changeFilePid(currentFolder.value.fileId as string)
 }
 
-//进行初始化操作
 const init = () => {
   FolderList.value = []
   currentFolder.value = { fileId: 0 }
   doCallBack()
 }
-//监听路由的变化
 watch(
   () => route,
   (newValue) => {
-    //如果不需要监听路由的话就返回
     if (!props.isWatchPath) {
       return
     }
@@ -105,14 +102,10 @@ watch(
     if (newValue.fullPath.indexOf('all') === -1) {
       return
     }
-    //得到path
     const path = route.query.path
     if (path == undefined) {
-      /* empty */
-      //进行初始化
       init()
     } else {
-      //得到了path，就要得到它的实际路径
       getNavigation(path as string)
       let pathArray = (path as string).split('/')
       currentFolder.value = {
