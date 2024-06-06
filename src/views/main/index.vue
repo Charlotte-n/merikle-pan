@@ -311,7 +311,6 @@ const getAllDirectory = async (type: string) => {
       const res = await getAllDirectoryApi(ids.value)
       directoryList.value = res.data
     }
-
     openMove.value = true
   } catch (e) {
     console.log(e, '获取全部目录')

@@ -10,7 +10,6 @@ import UploadTask from '@/views/lay-out/components/uploadTask.vue'
 import { useCommonStore } from '@/stores/common.ts'
 import { LOCALE_OPTIONS } from '@/lang'
 import { useLang } from '@/hooks/lang.ts'
-import { useStorage } from '@/hooks/useStorage.ts'
 import { useI18n } from 'vue-i18n'
 
 const CommonStore = useCommonStore()

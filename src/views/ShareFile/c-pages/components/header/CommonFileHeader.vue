@@ -14,7 +14,7 @@ const props = defineProps<{
   exportPdf?: () => void
   exportExcel?: () => void
   category: number
-  quill: any
+  quill?: any
 }>()
 const emits = defineEmits(['saveFile'])
 const router = useRouter()
@@ -81,7 +81,9 @@ onMounted(() => {
         <div>
           <a-button type="primary" @click="handleChangeTitle" v-if="!isChange">修改</a-button>
           <div v-else>
-            <a-button type="primary" class="mr-[10px]" @click="updateName">确定</a-button>
+            <a-button v-if="quill" type="primary" class="mr-[10px]" @click="updateName"
+              >确定</a-button
+            >
             <a-button @click="handleCancel">取消</a-button>
           </div>
         </div>

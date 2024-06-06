@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/CommonFileHeader.vue'
-import { getFileInfoApi } from '@/apis/file.ts'
 import { useRoute } from 'vue-router'
-import { GetFileContentApi } from '@/apis/commonFile.ts'
+import { GetFileInfoApi } from '@/apis/commonFile.ts'
 import { CATEGORY } from '@/data/common-file.ts'
 import { exportJs } from '@/util/luckysheet/export.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
@@ -13,7 +12,7 @@ const edit = ref(true)
 const userStore = useUserInfo()
 const userId = ref('')
 const fetchExcelData = async () => {
-  const res = await GetFileContentApi(route.params.id as string)
+  const res = await GetFileInfoApi(route.params.id as string)
   edit.value = res.data.edit
   userId.value = res.data.userId
 }
@@ -32,7 +31,7 @@ const init = () => {
 //获取文档名字以及内容
 const name = ref('')
 const getFileContent = async () => {
-  const res = await GetFileContentApi((route.params as any).id)
+  const res = await GetFileInfoApi((route.params as any).id)
   name.value = res.data.title
 }
 //导出excel(下载excel)

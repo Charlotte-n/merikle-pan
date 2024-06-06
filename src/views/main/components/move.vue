@@ -27,8 +27,7 @@ const navChange = (data: { categoryId: string; currentFolder: string }) => {
   currentFolder.value = data.categoryId
   fileId.value = (data.currentFolder as any).fileId
   if (fileId.value) {
-    //获取该目录下的目录
-    getSubCategoryApi(fileId.value, props.ids ? props.ids : [props.currentId]).then((res) => {
+    getSubCategoryApi(fileId.value, props.ids[0] ? props.ids : [props.currentId]).then((res) => {
       directory.value = res.data
     })
     //设置导航目录
@@ -43,7 +42,7 @@ const moveFileOrDirectory = (folderId: string) => {
     return
   }
   //进行移动
-  if (props.ids.length) {
+  if (props.ids[0]) {
     //批量移动
     MoveFileOrDirectoryApi({ ids: props.ids, filePid: folderId })
     emits('clearSelectedKey')
@@ -60,8 +59,9 @@ const moveFileOrDirectory = (folderId: string) => {
 <template>
   <div>
     <MyModel
+      v-if="open"
       :btn-other-show="false"
-      :open="props.open"
+      :open="open"
       title="移动到"
       show-cancel
       :ok-btn="{
@@ -91,7 +91,7 @@ const moveFileOrDirectory = (folderId: string) => {
           >
             <div
               :class="`w-[100%] flex items-center h-[50px] item`"
-              @click="selectFolder({ fileId: item._id, filename: item.file_name }, item)"
+              @click="selectFolder({ fileId: item._id, filename: item.file_name })"
             >
               <Icon
                 :file-type="
