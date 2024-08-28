@@ -33,15 +33,15 @@ import type { GetAllDirectoryData } from '@/apis/types/directory.ts'
 import Navigation from '@/components/navigation/index.vue'
 import { controlFileType } from '@/data/upload.ts'
 import Preview from '@/components/preview/Preview.vue'
-import { imageUrlBase } from '@/data/common.ts'
 import ShareFile from '@/views/main/components/ShareFile.vue'
+import download from '@/util/download.ts'
+import { CONFIRM_STATUS, DelOrEditNameEnum } from '@/views/main/types'
 
 const route = useRoute()
 const currentSecondMenuCategory = ref()
 const emits = defineEmits(['addFile'])
 const HomeData = ref<any>([])
 const UserStore = useUserInfo()
-
 const title = ref('')
 
 //=====================上传================================
@@ -93,12 +93,6 @@ const add = async (index: number) => {
 /**
  * 新建文件夹和重命名
  */
-
-enum CONFIRM_STATUS {
-  ADD_FOLDER = 0,
-  RENAME_FILE = 1,
-  RESET = 3
-}
 
 const confirmStatus = ref(CONFIRM_STATUS.RESET)
 const path = ref((route.query as { path: string }).path)
@@ -167,11 +161,6 @@ const RenameFile = async (index: number) => {
 }
 //==============================================================
 //定义是删除新建的文件夹还是重命名
-enum DelOrEditNameEnum {
-  DEL = 0,
-  EDIT_NAME = 1,
-  REST = 3
-}
 const DelOrEditName = ref(DelOrEditNameEnum.REST)
 //=========================================删除文件名================
 const cancelFolder = (index: number) => {
@@ -404,13 +393,6 @@ const navChange = (data: { categoryId: number; currentFolder: { fileId: string }
   //获取到文件信息
   getAllFile()
 }
-
-//#region下载
-const download = (fileInfo: any) => {
-  // HomeHoverData.value[5].show = !fileInfo.folder_type
-  window.location.href = imageUrlBase + fileInfo.fileCover
-}
-//endregion
 
 watch(
   () => route,

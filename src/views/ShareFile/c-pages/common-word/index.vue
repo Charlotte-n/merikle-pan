@@ -4,47 +4,17 @@ import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/Common
 import { onMounted, ref } from 'vue'
 import { GetFileContentApi, UpdateFileContentApi, GetFileInfoApi } from '@/apis/commonFile.ts'
 import { useRoute } from 'vue-router'
-import { useCommonShareFileStore } from '@/stores/commonShareFile.ts'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { CATEGORY } from '@/data/common-file.ts'
 import { MyQuill } from './utils/quill'
 import { MyYjs } from './utils/Yjs'
 
-const useCommonStore = useCommonShareFileStore()
 let quill: any
 const title = ref('')
-const content = ref('')
 const isEdit = ref(true)
 const userId = ref('')
 const route = useRoute()
-const toolbarOptions = [
-  ['bold', 'italic', 'underline', 'strike'], // 字体
-  ['blockquote', 'code-block'],
-
-  [{ header: 1 }, { header: 2 }], // 样式标题
-  [{ list: 'ordered' }, { list: 'bullet' }],
-  [{ script: 'sub' }, { script: 'super' }], // 下标、上标
-  [{ indent: '-1' }, { indent: '+1' }], // 缩进
-  [{ direction: 'rtl' }],
-
-  [{ size: ['small', false, 'large', 'huge'] }], // 字体
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-  [{ color: [] }, { background: [] }],
-  [{ font: [] }],
-  [{ align: [] }],
-
-  ['clean'] // 格式清除
-]
-const options = ref({
-  debug: 'info',
-  modules: {
-    toolbar: toolbarOptions
-  },
-  placeholder: '请输入内容',
-  theme: 'snow'
-})
 
 const editor = ref()
 const img = ref('')

@@ -7,14 +7,19 @@ import type { MergeParam, VerifyStatusParam } from '@/apis/types/file.ts'
 import { useUserInfo } from '@/stores/userInfo.ts'
 import { fileList, STATUS } from '@/data/upload.ts'
 import { useFileStore } from '@/stores/file.ts'
-import { inject } from 'vue'
+import { inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 //注入
 const reload: any = inject('reload')
 const UserStore = useUserInfo()
 const FileStore = useFileStore()
 const chunkSize = 1024 * 1024
-
+const emits = defineEmits(['changePopoverShow', 'closePopoverShow'])
+const props = defineProps({
+  instance: {
+    type: HTMLSpanElement
+  }
+})
 const addFile = async (file: any, fileId: string | number) => {
   const fileItem = {
     file: file,
@@ -46,7 +51,7 @@ const addFile = async (file: any, fileId: string | number) => {
     fileItem.status = STATUS.emptyfile.value
     return
   }
-  //计算md5,查一下这个是干什么的
+  //计算md5
   const md5FileUid = await computedMd5(fileItem)
   if (md5FileUid === null) {
     return
@@ -59,11 +64,9 @@ const addFile = async (file: any, fileId: string | number) => {
 const computedMd5 = (fileItem: SingleFileStatus): any => {
   let file = fileItem.file
   let blobSlice = file.slice || file.mozSlice || file.webkitSlice
-  //进行切分,总的切片数目,应该向上取整
   const chunks = Math.ceil(file.size / chunkSize)
   let currentIndex = 0
   const spark = new SparkMD5.ArrayBuffer()
-  //读取文件
   const fileReader = new FileReader()
   //进行加载下一部分file
   const loadNext = () => {
@@ -98,6 +101,7 @@ const computedMd5 = (fileItem: SingleFileStatus): any => {
       }
     }
     fileReader.onerror = (err) => {
+      //TODO:错了就要做一些措施通知用户，或者进行重新传递。
       resultFile.md5Progress = -1
       resultFile.status = STATUS.fail.value
       reject(fileItem.uid)
@@ -140,17 +144,18 @@ const uploadChunk = async (uid: string | number, chunkIndex: number, fileHash: s
       return 0
     } else {
       //可能是断点续传或者是一个新的上传
-      //上传中
+      //上传中,TODO:修改了
+      currentFile.chunkIndex = data[0]
       currentFile.status = STATUS.uploading.value
-      return 1
+      return data
     }
   }
   const res = await judjeFileStatus()
   if (res === 0) {
     return
   }
-  //分片上传
-  for (let i = chunkIndex; i < chunks; i++) {
+  //分片上传,TODO:修改了
+  for (let i = currentFile.chunkIndex; i < (res as number[]).length; i++) {
     //当前文件如果停止传输就不去传输了
     if (currentFile.pause) {
       break
@@ -211,81 +216,109 @@ const getFileById = (id: string | number) => {
     return item.file.uid === id
   })
 }
+function handleClear(id: string) {
+  const index = fileList.value.findIndex((item) => {
+    return item.uid === id
+  })
+  fileList.value.splice(index, 1)
+}
+
+//TODO:抽离出来，多个地方使用
+const popover = ref<HTMLDivElement>()
+function handleClickOutside(event: any) {
+  const isClick = !popover.value!.contains(event.target!)
+  const control = props.instance?.contains(event.target!)
+  if (isClick && !control) {
+    emits('closePopoverShow')
+  }
+}
+onMounted(() => {
+  nextTick(() => {
+    document.addEventListener('click', handleClickOutside)
+  })
+})
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+
 defineExpose({ addFile: addFile })
 </script>
 
 <template>
-  <header
-    class="popover-header pl-[10px] pr-[10px] pt-[10px] pb-[10px] border-b-[1px] border-solid border-[#DDDDDD] border-t-0 border-l-0 border-r-0"
-  >
-    <span>{{ $t('upload.task.title') }}</span>
-    <span class="text-[#AFAFAF] ml-[5px]">({{ $t('upload.task.subtitle') }})</span>
-  </header>
-  <main class="min-h-[450px] w-[800px]">
-    <div class="text-center pt-[20px]" v-if="fileList.length === 0">
-      <span class="text-center text-[#666666]">{{ $t('upload.task.none') }}</span>
-    </div>
-    <div v-else class="">
-      <ul>
-        <li
-          v-for="item in fileList"
-          :key="item.filename"
-          :style="{
-            borderBottom: '1px solid #DDDDDD'
-          }"
-          class="pl-[20px] pr-[20px] pt-[10px] pb-[10px]"
-        >
-          <div class="">{{ item.filename }}</div>
-          <div class="flex">
-            <!--            正常上传的状态-->
-            <a-progress
-              :percent="item.uploadProgress"
-              v-if="
-                item.status === STATUS.uploading.value ||
-                item.status === STATUS.upload_seconds.value ||
-                item.status === STATUS.upload_finish.value
-              "
-            ></a-progress>
-            <!--            MD5进度条-->
-            <a-progress
-              :percent="item.md5Progress"
-              type="circle"
-              :size="40"
-              v-if="item.status === STATUS.upload_seconds.value && item.md5Progress < 100"
-            >
-            </a-progress>
-            <DeleteOutlined
-              class="text-[20px] text-[#05A1F7] cursor-pointer"
-              v-if="
-                item.status === STATUS.upload_finish.value ||
-                item.status === STATUS.upload_seconds.value
-              "
-            />
-            <div v-else class="flex">
-              <PauseCircleOutlined class="mr-[10px] text-[20px] text-[#05A1F7] cursor-pointer" />
-              <CloseCircleOutlined
+  <div ref="popover">
+    <header
+      class="popover-header pl-[10px] pr-[10px] pt-[10px] pb-[10px] border-b-[1px] border-solid border-[#DDDDDD] border-t-0 border-l-0 border-r-0"
+    >
+      <span>{{ $t('upload.task.title') }}</span>
+      <span class="text-[#AFAFAF] ml-[5px]">({{ $t('upload.task.subtitle') }})</span>
+    </header>
+    <main class="min-h-[450px] w-[800px]">
+      <div class="text-center pt-[20px]" v-if="fileList.length === 0">
+        <span class="text-center text-[#666666]">{{ $t('upload.task.none') }}</span>
+      </div>
+      <div v-else class="">
+        <ul>
+          <li
+            v-for="item in fileList"
+            :key="item.filename"
+            :style="{
+              borderBottom: '1px solid #DDDDDD'
+            }"
+            class="pl-[20px] pr-[20px] pt-[10px] pb-[10px]"
+          >
+            <div class="">{{ item.filename }}</div>
+            <div class="flex">
+              <!--            正常上传的状态-->
+              <a-progress
+                :percent="item.uploadProgress"
+                v-if="
+                  item.status === STATUS.uploading.value ||
+                  item.status === STATUS.upload_seconds.value ||
+                  item.status === STATUS.upload_finish.value
+                "
+              ></a-progress>
+              <!--            MD5进度条-->
+              <a-progress
+                :percent="item.md5Progress"
+                type="circle"
+                :size="40"
+                v-if="item.status === STATUS.upload_seconds.value && item.md5Progress < 100"
+              >
+              </a-progress>
+              <DeleteOutlined
                 class="text-[20px] text-[#05A1F7] cursor-pointer"
-              ></CloseCircleOutlined>
+                v-if="
+                  item.status === STATUS.upload_finish.value ||
+                  item.status === STATUS.upload_seconds.value
+                "
+                @click="handleClear(item.uid)"
+              />
+              <div v-else class="flex">
+                <PauseCircleOutlined class="mr-[10px] text-[20px] text-[#05A1F7] cursor-pointer" />
+                <CloseCircleOutlined
+                  class="text-[20px] text-[#05A1F7] cursor-pointer"
+                ></CloseCircleOutlined>
+              </div>
             </div>
-          </div>
-          <div>
-            <i
-              :class="`iconfont mr-[10px] icon-` + STATUS[item.status].icon"
-              :style="{
-                color: STATUS[item.status].color
-              }"
-            ></i>
-            <span
-              :style="{
-                color: STATUS[item.status].color
-              }"
-              >{{ STATUS[item.status].desc }}</span
-            >
-          </div>
-        </li>
-      </ul>
-    </div>
-  </main>
+            <div>
+              <i
+                :class="`iconfont mr-[10px] icon-` + STATUS[item.status].icon"
+                :style="{
+                  color: STATUS[item.status].color
+                }"
+              ></i>
+              <span
+                :style="{
+                  color: STATUS[item.status].color
+                }"
+                >{{ STATUS[item.status].desc }}</span
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

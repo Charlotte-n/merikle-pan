@@ -12,8 +12,6 @@ import PreviewDownload from '@/components/preview/PreviewDownload.vue'
 
 //获取文件图片
 const imageUrl = computed(() => {
-  console.log(fileInfo.value, '文件信息为')
-  console.log(imageUrlBase + fileInfo.value.fileCover)
   return imageUrlBase + fileInfo.value.fileCover
 })
 
@@ -23,7 +21,6 @@ const windowShow = ref(false)
 const fileInfo = ref()
 const url = ref('')
 const showPreviewImage = (data: any) => {
-  console.log(data)
   fileInfo.value = data
   //如果是图片的话，那么就调用PreviewImage里面的show来显示
   if (fileInfo.value.file_type === 3) {

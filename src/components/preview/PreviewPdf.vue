@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
 import 'vue-pdf-embed/dist/style/index.css'
 import { imageUrlBase } from '@/data/common.ts'

@@ -37,6 +37,7 @@ const changePannal = (status: number) => {
 }
 //上传组件
 let uploadComponent = ref()
+const popOverBtn = ref<HTMLSpanElement>(null)
 const addFile = async (value: { file: File; filePid: string }) => {
   const { file, filePid } = value
   //当这个弹窗显示的话就会获取到这个uploadComponent
@@ -87,9 +88,16 @@ defineExpose({ addFile })
         trigger="click"
       >
         <template #content>
-          <UploadTask ref="uploadComponent"></UploadTask>
+          <UploadTask
+            ref="uploadComponent"
+            @closePopoverShow="CommonStore.closePopoverShow"
+            :instance="popOverBtn"
+          ></UploadTask>
         </template>
-        <span class="iconfont icon-transfer text-[#666666] text-[20px] cursor-pointer"></span>
+        <span
+          class="iconfont icon-transfer text-[#666666] text-[20px] cursor-pointer"
+          ref="popOverBtn"
+        ></span>
       </a-popover>
       <!--      用户的下拉框-->
       <a-dropdown placement="bottom">

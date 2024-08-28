@@ -26,8 +26,8 @@ const rowSelection = ref({
     selectIds.value = selectedRows.map((selectedRow: any) => selectedRow.id)
   }
 })
-const userStore = useUserInfo()
 
+const userStore = useUserInfo()
 const { toClipboard } = useClipboard()
 const link = async (fileInfo: any) => {
   await toClipboard(`链接为:${UrlBase + 'shareCheck/' + fileInfo.fileId},提取码为${fileInfo.code}`)

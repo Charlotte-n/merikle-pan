@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { getNavigationApi } from '@/apis/directory.ts'
 import { useFileStore } from '@/stores/file.ts'
 
-//是否要监听路由:因为不是所有的都要进行监听路由
 const router = useRouter()
 const route = useRoute()
 
@@ -30,7 +29,6 @@ const openFolder = (data: { filename: string; fileId: number | string }) => {
 }
 const setPath = () => {
   if (!props.isWatchPath) {
-    //不监听路由
     doCallBack()
     return
   }
@@ -39,7 +37,6 @@ const setPath = () => {
   FolderList.value.forEach((item) => {
     pathArray.push(item.fileId as string)
   })
-  //然后将文件进行拼接
   router.push({
     path: route.fullPath,
     query: pathArray.length === 0 ? undefined : { path: pathArray.join('/') }

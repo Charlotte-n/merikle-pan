@@ -34,7 +34,6 @@ watch(
 )
 const header = ref()
 let addFile = header.value?.addFile
-// let getAllFile =
 onMounted(() => {
   addFile = header.value.addFile
 })
