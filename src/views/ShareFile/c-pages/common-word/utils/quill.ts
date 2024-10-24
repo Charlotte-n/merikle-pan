@@ -51,7 +51,7 @@ export class MyQuill {
   }
   //插入文字
   insertText(_t: any) {
-    let { index } = this.quill.getSelection(true)
+    const { index } = this.quill.getSelection(true)
     this.quill.insertText(index, _t)
   }
   //获取当前光标
@@ -66,16 +66,15 @@ export class MyQuill {
   getDetail() {
     return this.quill.getContents()
   }
+
   //初始化文本编辑器
   init(data: any) {
     let detail: any = ''
-    let _T = data.replace(/[\r]/g, '#r#').replace(/[\n]/g, '#n#').replace(/[\t]/g, '#t#')
+    const _T = data.replace(/[\r]/g, '#r#').replace(/[\n]/g, '#n#').replace(/[\t]/g, '#t#')
     try {
       detail = JSON.parse(_T)
       console.log(detail)
-    } catch (e) {
-      console.log('出错了，文档解析错误', e)
-    }
+    } catch (e) {}
     /**
      * 需要先处理特殊字符，不然转不了JSON
      * 然后再根据特性，转回来，不然该换行的地方没有换行

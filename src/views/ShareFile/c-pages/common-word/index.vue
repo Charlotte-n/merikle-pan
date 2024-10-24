@@ -10,14 +10,15 @@ import { CATEGORY } from '@/data/common-file'
 import { MyQuill } from './utils/quill'
 import { MyYjs } from './utils/Yjs'
 
+const route = useRoute()
 let quill: any
 const title = ref('')
 const isEdit = ref(true)
 const userId = ref('')
-const route = useRoute()
-
 const editor = ref()
 const img = ref('')
+const cursors = ref<any>({}) //存储光标
+
 //#region 转化为pdf
 const exportPdf = () => {
   html2canvas(editor.value).then((canvas) => {
@@ -68,22 +69,67 @@ const getFileContent = async (fileId: string, quill: any) => {
 }
 //#endregion
 
+//更新光标
+const updateCursor = (clientId: number, user: { name: string; color: string }, index: number) => {
+  const quillEditor = quill.quill
+  if (!cursors.value[clientId]) {
+    //创建一个光标
+    const span = document.createElement('span')
+    span.classList.add('ql-cursor')
+    span.innerHTML = `
+      <span class="ql-cursor-flag">
+        <span class="ql-cursor-name"></span>
+      </span>
+      <span class="ql-cursor-caret"></span>
+    `
+    cursors.value[clientId] = quillEditor.addContainer('ql-cursor-container')
+    cursors.value[clientId].appendChild(span)
+  }
+
+  //更新光标的样式和位置
+  // 更新光标位置和样式
+  if (index) {
+    const cursor = cursors.value[clientId]
+    const bounds = quillEditor.getBounds(index)
+    cursor.style.left = bounds.left + 'px'
+    cursor.style.top = bounds.top + 'px'
+    cursor.style.height = bounds.height + 'px'
+    cursor.querySelector('.ql-cursor-name').textContent = user.name
+    cursor.querySelector('.ql-cursor-name').style.color = user.color
+    cursor.querySelector('.ql-cursor-caret').style.backgroundColor = user.color
+    cursor.style.display = 'block'
+  } else {
+    cursors.value[clientId].style.display = 'none'
+  }
+}
+
+//删除光标
+const deleteCursor = (clientId: number) => {
+  const cursor = cursors.value[clientId]
+  if (cursor) {
+    cursor.remove()
+    delete cursors.value[clientId]
+  }
+}
+
 onMounted(() => {
   let { id } = route.params
-  //获取文档信息
-  getFileInfo(id as string)
+
   quill = new MyQuill('#editor-container')
   quill.focus()
+
   //处理版本信息
   setTimeout(() => {
     getFileContent(id as string, quill)
   }, 100)
-  const yjs = new MyYjs(quill, id as string)
+
+  //创建一个roomName
+  new MyYjs(quill, id as string, 'merikle', updateCursor, deleteCursor)
 })
 </script>
 
 <template>
-  <header>
+  <header class="mb-[15px]">
     <CommonFileHeader
       @saveFile="saveFile"
       :title="title"
@@ -96,10 +142,32 @@ onMounted(() => {
   <div :id="`editor-container`" ref="editor" style="height: calc(100vh - 110px)"></div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 #editor {
   height: calc(100vh - 100px);
   width: 50%;
   margin: auto;
+}
+
+.ql-cursor-container {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+}
+.ql-cursor-caret {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  margin-left: -1px;
+  height: 100%;
+}
+.ql-cursor-flag {
+  position: absolute;
+  left: -10px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 </style>
