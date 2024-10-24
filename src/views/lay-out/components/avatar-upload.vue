@@ -2,8 +2,8 @@
 import { PlusOutlined } from '@ant-design/icons-vue'
 import { ref } from 'vue'
 import { message } from 'ant-design-vue'
-import { changeAvatarApi, GetUserInfo } from '@/apis/user.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { changeAvatarApi, GetUserInfo } from '@/apis/user'
+import { useUserInfo } from '@/stores/userInfo'
 
 const props = defineProps<{
   open: boolean

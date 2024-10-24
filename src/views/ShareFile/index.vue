@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { PlusOutlined, ImportOutlined } from '@ant-design/icons-vue'
 import MyTable from '@/components/table/index.vue'
-import { CommonFileColumnType } from '@/data/common-file.ts'
+import { CommonFileColumnType } from '@/data/common-file'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { CreateFileApi, GetFileListApi } from '@/apis/commonFile.ts'
-import type { uploadFileType } from '@/apis/types/commonFile.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { CreateFileApi, GetFileListApi } from '@/apis/commonFile'
+import type { uploadFileType } from '@/apis/types/commonFile'
+import { useUserInfo } from '@/stores/userInfo'
 import { message } from 'ant-design-vue'
 
 const router = useRouter()

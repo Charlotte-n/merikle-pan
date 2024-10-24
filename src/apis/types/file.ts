@@ -1,4 +1,4 @@
-import type { SingleFileStatus } from '@/data/types/file.ts'
+import type { SingleFileStatus } from '@/data/types/file'
 
 export interface UploadChunkParam {
   chunkIndex: number

@@ -1,4 +1,4 @@
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 
 const download = (fileInfo: any) => {
   // HomeHoverData.value[5].show = !fileInfo.folder_type

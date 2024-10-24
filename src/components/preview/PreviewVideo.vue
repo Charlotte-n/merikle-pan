@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 //@ts-ignore
 import DPlayer from 'dplayer'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 
 const props = defineProps({
   url: {

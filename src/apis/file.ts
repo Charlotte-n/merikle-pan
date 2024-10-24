@@ -7,9 +7,9 @@ import type {
   RenameFileDataType,
   UploadChunkParam,
   VerifyStatusParam
-} from '@/apis/types/file.ts'
-import type { SingleFileStatus } from '@/data/types/file.ts'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
+} from '@/apis/types/file'
+import type { SingleFileStatus } from '@/data/types/file'
+import type { CommonResponseType } from '@/apis/types/Response'
 
 enum BASEURL {
   UPLOAD_FILE = '/file/upload/chunk',

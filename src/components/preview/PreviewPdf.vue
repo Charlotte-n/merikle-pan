@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import VuePdfEmbed from 'vue-pdf-embed'
 import 'vue-pdf-embed/dist/style/index.css'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 
 const props = defineProps({
   url: {

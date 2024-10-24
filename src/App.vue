@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { LoadingOutlined } from '@ant-design/icons-vue'
 import { h, ref } from 'vue'
-import { useCommonStore } from '@/stores/common.ts'
+import { useCommonStore } from '@/stores/common'
 import 'quill/dist/quill.snow.css'
 const indicator = h(LoadingOutlined, {
   style: {

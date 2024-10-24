@@ -3,7 +3,7 @@ import { Modal } from 'ant-design-vue'
 import { createVNode, onMounted } from 'vue'
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import { useI18n } from 'vue-i18n'
 const emits = defineEmits(['cancel'])
 const UserStore = useUserInfo()

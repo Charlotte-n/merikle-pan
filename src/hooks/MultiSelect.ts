@@ -1,11 +1,11 @@
 import { Ref, ref } from 'vue'
 import type { Key } from 'ant-design-vue/es/_util/type'
-import type { DataItem } from '@/data/home.ts'
-import type { AddFolderDataType, RenameFileDataType } from '@/apis/types/file.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import type { DataItem } from '@/data/home'
+import type { AddFolderDataType, RenameFileDataType } from '@/apis/types/file'
+import { useUserInfo } from '@/stores/userInfo'
 import { useRoute } from 'vue-router'
 import { CONFIRM_STATUS, DelOrEditNameEnum } from '@/views/main/types'
-import { addFolderApi, RenameFileApi } from '@/apis/file.ts'
+import { addFolderApi, RenameFileApi } from '@/apis/file'
 import { message } from 'ant-design-vue'
 
 function useMultiSelect() {

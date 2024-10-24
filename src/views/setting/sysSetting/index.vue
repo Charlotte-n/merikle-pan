@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { initialSpaceApi } from '@/apis/settings.ts'
+import { initialSpaceApi } from '@/apis/settings'
 import { message } from 'ant-design-vue'
 
 const initialSpace = ref<string>('')

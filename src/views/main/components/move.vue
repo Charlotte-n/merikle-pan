@@ -3,7 +3,7 @@ import MyModel from '@/components/ant-modal/ant-modal.vue'
 import { ref } from 'vue'
 import Icon from '@/components/icon/index.vue'
 import Navigation from '@/components/navigation/index.vue'
-import { getSubCategoryApi, MoveFileOrDirectoryApi } from '@/apis/directory.ts'
+import { getSubCategoryApi, MoveFileOrDirectoryApi } from '@/apis/directory'
 import { message } from 'ant-design-vue'
 
 const props = defineProps<{

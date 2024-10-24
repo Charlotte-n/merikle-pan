@@ -1,10 +1,10 @@
 import axios from 'axios'
 import type { AxiosInstance } from 'axios'
 import type { HYRequestConfig } from './type'
-import { useUserInfo } from '@/stores/userInfo.ts'
-import { useStorage } from '@/hooks/useStorage.ts'
+import { useUserInfo } from '@/stores/userInfo'
+import { useStorage } from '@/hooks/useStorage'
 import { message } from 'ant-design-vue'
-import { useCommonStore } from '@/stores/common.ts'
+import { useCommonStore } from '@/stores/common'
 // 拦截器: 蒙版Loading/token/修改配置
 /**
  * 两个难点:

@@ -1,6 +1,6 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type { ShareInfoData, ShareLinkData, ShareLinkParam } from '@/apis/types/share.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
+import type { ShareInfoData, ShareLinkData, ShareLinkParam } from '@/apis/types/share'
 
 enum BASEURL {
   CREATE_SHARE_LINK = '/share/link',

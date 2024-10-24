@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { nextTick, ref } from 'vue'
 import MyTable from '@/components/table/index.vue'
-import { type DataItem, HomeColumns, HomeHoverData } from '@/data/home.ts'
-import { useMultiSelect, useGetOptions, useDeleteOrReName } from '@/hooks/MultiSelect.ts'
+import { type DataItem, HomeColumns, HomeHoverData } from '@/data/home'
+import { useMultiSelect, useGetOptions, useDeleteOrReName } from '@/hooks/MultiSelect'
 import { CloseSquareFilled, CheckSquareFilled } from '@ant-design/icons-vue'
-import download from '@/util/download.ts'
-import type { DeleteFileDataType } from '@/apis/types/file.ts'
-import { deleteFileApi } from '@/apis/file.ts'
+import download from '@/util/download'
+import type { DeleteFileDataType } from '@/apis/types/file'
+import { deleteFileApi } from '@/apis/file'
 import { message } from 'ant-design-vue'
 
 const props = defineProps<{

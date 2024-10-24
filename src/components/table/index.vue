@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
-import type { DataItem } from '@/data/home.ts'
+import type { DataItem } from '@/data/home'
 const props = defineProps<{
   columns: any
   data: any

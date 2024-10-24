@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PreviewImage from '@/components/preview/PreviewImage.vue'
 import { computed, getCurrentInstance, nextTick, ref } from 'vue'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 import Window from '@/components/window/index.vue'
 import PreviewVideo from '@/components/preview/PreviewVideo.vue'
 import PreviewDoc from '@/components/preview/PreviewDoc.vue'

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import Header from '@/views/lay-out/header.vue'
+import Header from './lay-out/header.vue'
+
 import { useRouter, useRoute } from 'vue-router'
 import { computed, nextTick, onMounted, provide, ref, watch } from 'vue'
-import { menu } from '@/data/home.ts'
-import { GetUserInfo, getUserSpaceApi } from '@/apis/user.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { menu } from '@/data/home'
+import { GetUserInfo, getUserSpaceApi } from '@/apis/user'
+import { useUserInfo } from '@/stores/userInfo'
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserInfo()

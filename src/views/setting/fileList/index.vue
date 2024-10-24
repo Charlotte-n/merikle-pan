@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import MyTable from '@/components/table/index.vue'
 import type { Key } from 'ant-design-vue/es/_util/type'
-import type { DataItem } from '@/data/home.ts'
+import type { DataItem } from '@/data/home'
 
 //#region table
 const columnData = ref([

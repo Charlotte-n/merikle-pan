@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Icon from '@/components/icon/index.vue'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 const props = defineProps<{
   fileInfo: any
 }>()

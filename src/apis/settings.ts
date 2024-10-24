@@ -1,6 +1,6 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type { AllUserInfo, SingleUserInfo } from '@/apis/types/settings.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
+import type { AllUserInfo, SingleUserInfo } from '@/apis/types/settings'
 
 enum BASEURL {
   GET_USER_LIST = '/admin/findAllUser',

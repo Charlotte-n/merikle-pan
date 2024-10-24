@@ -1,1 +1,1 @@
-import type { HoverData } from '@/data/home.ts'
+import type { HoverData } from '@/data/home'

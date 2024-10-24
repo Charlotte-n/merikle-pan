@@ -1,11 +1,6 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type {
-  LoginDataType,
-  LoginParam,
-  RegisterParam,
-  ResetPasswordParam
-} from '@/apis/types/lr.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
+import type { LoginDataType, LoginParam, RegisterParam, ResetPasswordParam } from '@/apis/types/lr'
 
 enum BASEURL {
   IMAGE_CAPTCHA = '/lr/captcha',

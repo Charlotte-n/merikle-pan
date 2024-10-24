@@ -2,11 +2,11 @@
 import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/CommonFileHeader.vue'
 //@ts-ignore
 import { onMounted, ref } from 'vue'
-import { GetFileContentApi, UpdateFileContentApi, GetFileInfoApi } from '@/apis/commonFile.ts'
+import { GetFileContentApi, UpdateFileContentApi, GetFileInfoApi } from '@/apis/commonFile'
 import { useRoute } from 'vue-router'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
-import { CATEGORY } from '@/data/common-file.ts'
+import { CATEGORY } from '@/data/common-file'
 import { MyQuill } from './utils/quill'
 import { MyYjs } from './utils/Yjs'
 

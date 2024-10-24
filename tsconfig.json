@@ -12,9 +12,15 @@
     "baseUrl": "./",
     "paths": {
       "@": ["src"],
-      "@/*": ["src/*"],
-    }
+      "@/*": ["src/*"]
+    },
+    "allowJs": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
-  "allowImportingTsExtensions": true,
-   "extensions": [".ts", ".tsx", ".js"]
+
+  "extensions": [".ts", ".tsx", ".js"]
 }

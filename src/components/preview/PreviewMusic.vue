@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 import 'APlayer/dist/APlayer.min.css'
 //@ts-ignore
 import APlayer from 'Aplayer'
-import { imageUrlBase } from '@/data/common.ts'
+import { imageUrlBase } from '@/data/common'
 
 const props = defineProps({
   url: {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useModal } from '@/hooks/login-use-data.ts'
-import type { ModalPropsType } from '@/components/ant-modal/type.ts'
+import { useModal } from '@/hooks/login-use-data'
+import type { ModalPropsType } from '@/components/ant-modal/type'
 
 const props = defineProps<ModalPropsType>()
 const emit = defineEmits<{

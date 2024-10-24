@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import type { Rule } from 'ant-design-vue/lib/form'
-import { VerifyCaptchaApi } from '@/apis/lr.ts'
+import { VerifyCaptchaApi } from '@/apis/lr'
 
 export enum login {
   'login' = 0,

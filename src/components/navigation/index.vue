@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getNavigationApi } from '@/apis/directory.ts'
-import { useFileStore } from '@/stores/file.ts'
+import { getNavigationApi } from '@/apis/directory'
+import { useFileStore } from '@/stores/file'
 
 const router = useRouter()
 const route = useRoute()

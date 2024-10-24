@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { getFileStreamApi } from '@/apis/preview.ts'
+import { getFileStreamApi } from '@/apis/preview'
 import { read, utils } from 'xlsx'
 
 const props = defineProps({

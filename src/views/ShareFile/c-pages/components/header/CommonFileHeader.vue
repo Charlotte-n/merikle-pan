@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import { onMounted, ref } from 'vue'
-import { getImage } from '@/util/getImage.ts'
-import { updateFileNameApi } from '@/apis/commonFile.ts'
+import { getImage } from '@/util/getImage'
+import { updateFileNameApi } from '@/apis/commonFile'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import ShareModal from '@/views/ShareFile/c-pages/components/share-modal/ShareModal.vue'

@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import type { SingleFileStatus } from './types/file.ts'
+import type { SingleFileStatus } from './types/file'
 
 export const STATUS: any = {
   emptyfile: {

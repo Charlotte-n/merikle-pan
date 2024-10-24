@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import { Avatar } from 'ant-design-vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-import type { AvatarProps } from '@/components/avatar/index.ts'
+import type { AvatarProps } from '@/components/avatar/index'
 
 const props = defineProps<AvatarProps>()
 const { userInfo } = useUserInfo()

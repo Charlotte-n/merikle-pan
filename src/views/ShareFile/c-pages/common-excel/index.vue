@@ -2,10 +2,10 @@
 import { onMounted, ref } from 'vue'
 import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/CommonFileHeader.vue'
 import { useRoute } from 'vue-router'
-import { GetFileInfoApi } from '@/apis/commonFile.ts'
-import { CATEGORY } from '@/data/common-file.ts'
-import { exportJs } from '@/util/luckysheet/export.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { GetFileInfoApi } from '@/apis/commonFile'
+import { CATEGORY } from '@/data/common-file'
+import { exportJs } from '@/util/luckysheet/export'
+import { useUserInfo } from '@/stores/userInfo'
 
 const route = useRoute()
 const edit = ref(true)

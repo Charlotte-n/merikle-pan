@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 import type { Rule } from 'ant-design-vue/lib/form'
-import { ResetPasswordApi } from '@/apis/lr.ts'
-import { useStorage } from '@/hooks/useStorage.ts'
+import { ResetPasswordApi } from '@/apis/lr'
+import { useStorage } from '@/hooks/useStorage'
 import { message } from 'ant-design-vue'
 const storage = useStorage()
 const UserInfo = JSON.parse(storage.getItem('userInfoExtra'))

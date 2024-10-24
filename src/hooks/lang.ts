@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { useStorage } from '@/hooks/useStorage.ts'
+import { useStorage } from '@/hooks/useStorage'
 import { LOCALE_OPTIONS } from '@/lang'
 
 export const useLang = (locale: { value: string }) => {

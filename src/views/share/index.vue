@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { StopOutlined } from '@ant-design/icons-vue'
-import { shareColume, ShareHoverData } from '@/data/share.ts'
+import { shareColume, ShareHoverData } from '@/data/share'
 import { onMounted, ref } from 'vue'
 import type { Key } from 'ant-design-vue/es/_util/type'
-import { cancelShareFileApi, getShareFileListApi } from '@/apis/share.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { cancelShareFileApi, getShareFileListApi } from '@/apis/share'
+import { useUserInfo } from '@/stores/userInfo'
 import moment from 'moment'
 import Icon from '@/components/icon/index.vue'
 import useClipboard from 'vue-clipboard3'
-import { imageUrlBase, UrlBase } from '@/data/common.ts'
+import { imageUrlBase, UrlBase } from '@/data/common'
 import { message } from 'ant-design-vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()

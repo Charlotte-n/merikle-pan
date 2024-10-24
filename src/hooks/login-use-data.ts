@@ -1,6 +1,6 @@
-import { formState, rules } from '@/data/login.ts'
+import { formState, rules } from '@/data/login'
 import { computed } from 'vue'
-import type { ModalPropsType } from '@/components/ant-modal/type.ts'
+import type { ModalPropsType } from '@/components/ant-modal/type'
 
 export const useLoginData = () => {
   return {

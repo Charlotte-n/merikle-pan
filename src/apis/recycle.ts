@@ -1,6 +1,6 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type { RecycleListDataType } from '@/apis/types/recycle.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
+import type { RecycleListDataType } from '@/apis/types/recycle'
 
 enum BASEURL {
   RECYCLE_LIST = '/recycle/list',

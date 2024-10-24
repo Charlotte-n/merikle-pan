@@ -1,6 +1,6 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
-import type { GetAllDirectoryData, MoveFileBody } from '@/apis/types/directory.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
+import type { GetAllDirectoryData, MoveFileBody } from '@/apis/types/directory'
 
 enum BASEURL {
   GET_ALL_DIRECTORY = '/directory/allDirectory',

@@ -1,5 +1,5 @@
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
 
 enum BASEURL {
   changeAvatar = '/user/upload/avatar',

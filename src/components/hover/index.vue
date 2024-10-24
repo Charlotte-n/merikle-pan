@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { HomeHoverData } from '@/data/home.ts'
+import { HomeHoverData } from '@/data/home'
 const props = defineProps<{
   fileInfo: any
   data: any

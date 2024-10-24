@@ -1,6 +1,6 @@
-import type { uploadFileType } from '@/apis/types/commonFile.ts'
+import type { uploadFileType } from '@/apis/types/commonFile'
 import hyRequest from '@/services'
-import type { CommonResponseType } from '@/apis/types/Response.ts'
+import type { CommonResponseType } from '@/apis/types/Response'
 
 enum BASEURL {
   CREATE_FILE = '/commonFile/uploadFileContent',

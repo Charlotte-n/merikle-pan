@@ -9,32 +9,28 @@ import {
 import { computed, createVNode, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Hover from '@/components/hover/index.vue'
-import { type DataItem, HomeColumns, HomeHoverData } from '@/data/home.ts'
+import { type DataItem, HomeColumns, HomeHoverData } from '@/data/home'
 import {
   addFolderApi,
   deleteFileApi,
   getAllFileApi,
   multipleDeleteApi,
   RenameFileApi
-} from '@/apis/file.ts'
+} from '@/apis/file'
 import moment from 'moment'
 import Icon from '@/components/icon/index.vue'
-import type {
-  AddFolderDataType,
-  DeleteFileDataType,
-  RenameFileDataType
-} from '@/apis/types/file.ts'
+import type { AddFolderDataType, DeleteFileDataType, RenameFileDataType } from '@/apis/types/file'
 import { message, Modal } from 'ant-design-vue'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import type { Key } from 'ant-design-vue/es/_util/type'
 import Move from '@/views/main/components/move.vue'
-import { getAllDirectoryApi } from '@/apis/directory.ts'
-import type { GetAllDirectoryData } from '@/apis/types/directory.ts'
+import { getAllDirectoryApi } from '@/apis/directory'
+import type { GetAllDirectoryData } from '@/apis/types/directory'
 import Navigation from '@/components/navigation/index.vue'
-import { controlFileType } from '@/data/upload.ts'
+import { controlFileType } from '@/data/upload'
 import Preview from '@/components/preview/Preview.vue'
 import ShareFile from '@/views/main/components/ShareFile.vue'
-import download from '@/util/download.ts'
+import download from '@/util/download'
 import { CONFIRM_STATUS, DelOrEditNameEnum } from '@/views/main/types'
 
 const route = useRoute()

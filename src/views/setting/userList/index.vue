@@ -6,9 +6,9 @@ import {
   deleteUserApi,
   getAllUserListApi,
   SearchUserApi
-} from '@/apis/settings.ts'
-import { avatarImageUrl } from '@/data/common.ts'
-import type { SingleUserInfo } from '@/apis/types/settings.ts'
+} from '@/apis/settings'
+import { avatarImageUrl } from '@/data/common'
+import type { SingleUserInfo } from '@/apis/types/settings'
 import moment from 'moment'
 import { message } from 'ant-design-vue'
 import AntModal from '@/components/ant-modal/ant-modal.vue'

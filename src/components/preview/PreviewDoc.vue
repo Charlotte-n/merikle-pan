@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue'
 //@ts-ignore
 import { renderAsync } from 'docx-preview'
-import { getFileStreamApi } from '@/apis/preview.ts'
+import { getFileStreamApi } from '@/apis/preview'
 const props = defineProps({
   url: {
     type: String

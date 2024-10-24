@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { CycleColumn, CycleHoverData } from '@/data/cycle.js'
-import { completeDeleteApi, getRecycleListApi, revertFileApi } from '@/apis/recycle.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { completeDeleteApi, getRecycleListApi, revertFileApi } from '@/apis/recycle'
+import { useUserInfo } from '@/stores/userInfo'
 import { onMounted, ref } from 'vue'
 import type { Key } from 'ant-design-vue/es/_util/type'
 import Icon from '@/components/icon/index.vue'
-import type { RecycleSingleType } from '@/apis/types/recycle.ts'
+import type { RecycleSingleType } from '@/apis/types/recycle'
 import { message } from 'ant-design-vue'
-import { imageUrlBase } from '@/data/common.ts'
-import { getUserSpaceApi } from '@/apis/user.ts'
+import { imageUrlBase } from '@/data/common'
+import { getUserSpaceApi } from '@/apis/user'
 
 const userStore = useUserInfo()
 const selectedRowKey = ref<any>([])

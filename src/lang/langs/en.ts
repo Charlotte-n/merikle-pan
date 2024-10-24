@@ -1,7 +1,7 @@
-import LayoutHeaderEn from '@/views/main/lang/en.ts'
-import ShareEn from '@/views/share/lang/en.ts'
-import CycleEn from '@/views/cycle/lang/en.ts'
-import CommonFileEn from '@/views/ShareFile/lang/en.ts'
+import LayoutHeaderEn from '@/views/main/lang/en'
+import ShareEn from '@/views/share/lang/en'
+import CycleEn from '@/views/cycle/lang/en'
+import CommonFileEn from '@/views/ShareFile/lang/en'
 export default {
   'upload.task.title': 'uploadTask',
   'upload.task.subtitle': 'only show the task',

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginRegister from '@/views/login-register/index.vue'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import Message from '@/components/message'
 import { markRaw } from 'vue'
 

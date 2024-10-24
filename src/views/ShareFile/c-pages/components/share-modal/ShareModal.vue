@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { CATEGORY, CommonFileShareData } from '@/data/common-file.ts'
+import { CATEGORY, CommonFileShareData } from '@/data/common-file'
 import useClipboard from 'vue-clipboard3'
 import { message } from 'ant-design-vue'
 import { useRoute } from 'vue-router'
-import { UrlBaseOther } from '@/data/common.ts'
+import { UrlBaseOther } from '@/data/common'
 import { jsPDF } from 'jspdf'
 import { nextTick, onMounted, ref } from 'vue'
-import { updateFilePrivial } from '@/apis/commonFile.ts'
+import { updateFilePrivial } from '@/apis/commonFile'
 
 const props = defineProps<{
   open: boolean

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { useUserInfo } from '@/stores/userInfo'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getShareInfoApi } from '@/apis/share.ts'
-import type { ShareInfoData } from '@/apis/types/share.ts'
+import { getShareInfoApi } from '@/apis/share'
+import type { ShareInfoData } from '@/apis/types/share'
 import moment from 'moment'
 import { message } from 'ant-design-vue'
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { PauseCircleOutlined, CloseCircleOutlined, DeleteOutlined } from '@ant-design/icons-vue'
-import type { SingleFileStatus } from '@/data/types/file.ts'
+import type { SingleFileStatus } from '@/data/types/file'
 import SparkMD5 from 'spark-md5'
-import { MergeApi, UploadChunkApi, VerifyStatusApi } from '@/apis/file.ts'
-import type { MergeParam, VerifyStatusParam } from '@/apis/types/file.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
-import { fileList, STATUS } from '@/data/upload.ts'
-import { useFileStore } from '@/stores/file.ts'
+import { MergeApi, UploadChunkApi, VerifyStatusApi } from '@/apis/file'
+import type { MergeParam, VerifyStatusParam } from '@/apis/types/file'
+import { useUserInfo } from '@/stores/userInfo'
+import { fileList, STATUS } from '@/data/upload'
+import { useFileStore } from '@/stores/file'
 import { inject, nextTick, onMounted, onUnmounted, ref } from 'vue'
 
 //注入

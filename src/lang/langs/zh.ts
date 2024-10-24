@@ -1,7 +1,7 @@
-import LayoutHeaderCh from '@/views/main/lang/ch.ts'
-import ShareCh from '@/views/share/lang/ch.ts'
-import CycleCh from '@/views/cycle/lang/ch.ts'
-import CommonFileCh from '@/views/ShareFile/lang/ch.ts'
+import LayoutHeaderCh from '@/views/main/lang/ch'
+import ShareCh from '@/views/share/lang/ch'
+import CycleCh from '@/views/cycle/lang/ch'
+import CommonFileCh from '@/views/ShareFile/lang/ch'
 
 export default {
   'upload.task.title': '上传任务',

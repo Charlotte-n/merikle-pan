@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useLoginData } from '@/hooks/login-use-data.ts'
+import { useLoginData } from '@/hooks/login-use-data'
 import { UserOutlined, LockOutlined, VerifiedOutlined } from '@ant-design/icons-vue'
 import AntModal from '@/components/ant-modal/ant-modal.vue'
-import { login } from '@/data/login.ts'
+import { login } from '@/data/login'
 import type { FormInstance } from 'ant-design-vue'
 import {
   getImageCaptcha,
@@ -12,13 +12,13 @@ import {
   ResetPasswordApi,
   SendEmailApi,
   verifyCodeApi
-} from '@/apis/lr.ts'
+} from '@/apis/lr'
 import { useRouter } from 'vue-router'
 
 import { message } from 'ant-design-vue'
-import { md5, digetMd5 } from '@/util/md5.ts'
-import { useStorage } from '@/hooks/useStorage.ts'
-import { useUserInfo } from '@/stores/userInfo.ts'
+import { md5, digetMd5 } from '@/util/md5'
+import { useStorage } from '@/hooks/useStorage'
+import { useUserInfo } from '@/stores/userInfo'
 import stores from '@/stores'
 const show = ref(0) //登录为0，没有账号注册为1，忘记密码为2
 const { formState, rules } = useLoginData()
