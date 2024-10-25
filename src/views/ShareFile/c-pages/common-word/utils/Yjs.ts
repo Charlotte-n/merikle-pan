@@ -26,13 +26,19 @@ export class MyYjs {
     //websocket连接
     const provider = new WebsocketProvider('ws://localhost:1234', `${roomName}/merikle`, this.ydoc)
     this.provider = provider
-    this.setupAwareness(username)
+
     this.setupCursorTracking()
 
     //监听事件
     provider.on('status', (event: any) => {
       if (event.status === 'connected') {
         console.log('连接成功')
+        this.setupAwareness(username)
+      }
+      if (event.status === 'disconnected') {
+        console.log('连接断开')
+        //然后去除这个光标
+        this.deleteCursor(provider.awareness.clientID)
       }
     })
 
@@ -40,6 +46,7 @@ export class MyYjs {
     provider.on('error', (event: any) => {
       console.log('连接失败', event)
     })
+
     //y-websocket
     new QuillBinding(yText, quill.quill)
   }
@@ -64,7 +71,6 @@ export class MyYjs {
         })
       }
     })
-
     this.provider.awareness.on('change', () => {
       this.updateRemoteCursors()
     })
@@ -73,7 +79,6 @@ export class MyYjs {
   //对获取到的光标进行处理，然后去展示光标
   updateRemoteCursors() {
     const states = this.provider.awareness.getStates()
-    console.log(states)
     states.forEach((state: any, clientId: number) => {
       if (state.user) {
         if (clientId !== this.provider.awareness.clientID && state.cursor) {

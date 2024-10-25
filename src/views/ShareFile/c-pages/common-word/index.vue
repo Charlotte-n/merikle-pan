@@ -2,13 +2,15 @@
 import CommonFileHeader from '@/views/ShareFile/c-pages/components/header/CommonFileHeader.vue'
 //@ts-ignore
 import { onMounted, ref } from 'vue'
-import { GetFileContentApi, UpdateFileContentApi, GetFileInfoApi } from '@/apis/commonFile'
+import { UpdateFileContentApi, GetFileInfoApi } from '@/apis/commonFile'
 import { useRoute } from 'vue-router'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { CATEGORY } from '@/data/common-file'
 import { MyQuill } from './utils/quill'
 import { MyYjs } from './utils/Yjs'
+import { Tocbot } from './utils/tobot'
+import 'tocbot/src/scss/tocbot.scss'
 
 const route = useRoute()
 let quill: any
@@ -18,6 +20,7 @@ const userId = ref('')
 const editor = ref()
 const img = ref('')
 const cursors = ref<any>({}) //存储光标
+let wsYjs: any
 
 //#region 转化为pdf
 const exportPdf = () => {
@@ -60,15 +63,6 @@ const getFileInfo = async (fileId: string) => {
 }
 //#endregion
 
-//#region 获取文档内容
-const getFileContent = async (fileId: string, quill: any) => {
-  let { ops } = quill.getDetail()
-  if (ops[0].insert !== '\n') return
-  const result = await GetFileContentApi(fileId as string)
-  if (result.code === 0) quill.init(result.data.content[0])
-}
-//#endregion
-
 //更新光标
 const updateCursor = (clientId: number, user: { name: string; color: string }, index: number) => {
   const quillEditor = quill.quill
@@ -106,6 +100,8 @@ const updateCursor = (clientId: number, user: { name: string; color: string }, i
 //删除光标
 const deleteCursor = (clientId: number) => {
   const cursor = cursors.value[clientId]
+  console.log('删除光标')
+
   if (cursor) {
     cursor.remove()
     delete cursors.value[clientId]
@@ -114,17 +110,13 @@ const deleteCursor = (clientId: number) => {
 
 onMounted(() => {
   let { id } = route.params
-
   quill = new MyQuill('#editor-container')
   quill.focus()
-
-  //处理版本信息
-  setTimeout(() => {
-    getFileContent(id as string, quill)
-  }, 100)
-
   //创建一个roomName
   new MyYjs(quill, id as string, 'merikle', updateCursor, deleteCursor)
+  const tocbot = new Tocbot()
+  const res = tocbot.init()
+  console.log(res)
 })
 </script>
 
@@ -138,8 +130,20 @@ onMounted(() => {
       :quill="quill"
     ></CommonFileHeader>
   </header>
+
   <!--  引入文件编辑器-->
-  <div :id="`editor-container`" ref="editor" style="height: calc(100vh - 110px)"></div>
+  <div class="flex">
+    <div class="js-toc"></div>
+    <div class="editor">
+      <!-- Create toolbar container -->
+      <div
+        :id="`editor-container`"
+        ref="editor"
+        style="height: calc(100vh - 110px)"
+        class="js-toc-content"
+      ></div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss">

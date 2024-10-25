@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import 'APlayer/dist/APlayer.min.css'
+import 'aplayer/dist/APlayer.min.css'
 //@ts-ignore
-import APlayer from 'Aplayer'
+import APlayer from 'aplayer'
 import { imageUrlBase } from '@/data/common'
 
 const props = defineProps({
